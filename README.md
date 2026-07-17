@@ -1,6 +1,6 @@
 # Kivalliq Arctic charr lcWGS pipeline
 
-Population genomics pipeline for Chapter 1 (CJFAS manuscript, V19) — fine-scale
+Population genomics pipeline for Chapter 1 (CJFAS manuscript) — fine-scale
 regional structure and Atlantic-Arctic introgression in anadromous Arctic
 charr (*Salvelinus alpinus*) across 13 populations (405 individuals) in the
 Kivalliq region, Nunavut.
