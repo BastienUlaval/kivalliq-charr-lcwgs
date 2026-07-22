@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 02_genotype_likelihoods.sh — Compute GL and MAF on canonical SNPs
+# 02_genotype_likelihoods.sh -- Compute GL and MAF on canonical SNPs
 # Runs per chromosome via SLURM array, then concatenates
 # Submit: sbatch 01_scripts/bash/02_genotype_likelihoods.sh
 # =============================================================================
@@ -30,7 +30,7 @@ read -r N_IND MIN_IND MAX_DEPTH <<< "$(compute_filters "$BAMLIST")"
 
 require_file "$SITES" "Canonical sites for chr${REGION_NUM}"
 
-log_msg "=== GL — CHROMOSOME ${REGION_NUM} ==="
+log_msg "=== GL -- CHROMOSOME ${REGION_NUM} ==="
 
 angsd -P $NB_CPU -nQueueSize 50 \
   -doMaf 1 -GL 2 -doGlf 2 -doMajorMinor 1 \
@@ -42,4 +42,4 @@ angsd -P $NB_CPU -nQueueSize 50 \
   -b "$BAMLIST" \
   -out "${GL_DIR}/by_chr/all_${SUFFIX}_chr${REGION_NUM}"
 
-log_msg "=== GL — CHROMOSOME ${REGION_NUM} COMPLETE ==="
+log_msg "=== GL -- CHROMOSOME ${REGION_NUM} COMPLETE ==="

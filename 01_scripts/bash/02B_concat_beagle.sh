@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 02B_concat_beagle.sh — Concatenate per-chromosome Beagle files
+# 02B_concat_beagle.sh -- Concatenate per-chromosome Beagle files
 # Also builds the combined canonical sites file
 # Run AFTER all 02_genotype_likelihoods.sh array jobs complete
 # Submit: sbatch 01_scripts/bash/02B_concat_beagle.sh
@@ -19,7 +19,7 @@ source config/00_config.sh
 
 log_msg "=== CONCATENATING BEAGLE FILES ==="
 
-# ─── 1. Combine canonical site lists ────────────────────────────────────────
+# --- 1. Combine canonical site lists ----------------------------------------
 log_msg "Step 1: Combining canonical site lists..."
 
 COMBINED_SITES="${INFO_DIR}/sites_all_${SUFFIX}_canonical"
@@ -40,7 +40,7 @@ angsd sites index "$COMBINED_SITES"
 N_SITES=$(wc -l < "$COMBINED_SITES")
 log_msg "  Total canonical sites: ${N_SITES}"
 
-# ─── 2. Create nosex version (exclude sex chromosomes) ──────────────────────
+# --- 2. Create nosex version (exclude sex chromosomes) ----------------------
 log_msg "Step 2: Creating autosomal-only sites..."
 
 NOSEX_SITES="${INFO_DIR}/sites_all_${SUFFIX}_canonical_nosex"
@@ -50,7 +50,7 @@ angsd sites index "$NOSEX_SITES"
 N_NOSEX=$(wc -l < "$NOSEX_SITES")
 log_msg "  Autosomal canonical sites: ${N_NOSEX}"
 
-# ─── 3. Concatenate Beagle files (all chromosomes) ──────────────────────────
+# --- 3. Concatenate Beagle files (all chromosomes) --------------------------
 log_msg "Step 3: Concatenating Beagle files..."
 
 OUT_BEAGLE="${GL_DIR}/all_${SUFFIX}.beagle.gz"
@@ -90,13 +90,13 @@ gzip -f "$TEMP_BEAGLE"
 log_msg "  Total SNPs in concatenated Beagle: ${TOTAL_SNPS}"
 [[ $SKIPPED -gt 0 ]] && log_msg "  WARNING: ${SKIPPED} chromosomes missing"
 
-# ─── 4. Validate ────────────────────────────────────────────────────────────
+# --- 4. Validate ------------------------------------------------------------
 log_msg "Step 4: Validation..."
 
 N_COLS=$(zcat "$OUT_BEAGLE" | head -1 | awk '{print NF}')
 N_IND=$(( (N_COLS - 3) / 3 ))
 N_SNPS=$(zcat "$OUT_BEAGLE" | tail -n +2 | wc -l)
 
-log_msg "  Beagle: ${N_IND} individuals × ${N_SNPS} SNPs"
+log_msg "  Beagle: ${N_IND} individuals x ${N_SNPS} SNPs"
 
 log_msg "=== CONCATENATION COMPLETE ==="

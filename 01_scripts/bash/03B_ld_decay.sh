@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 03B_ld_decay.sh — Fit LD decay curve
+# 03B_ld_decay.sh -- Fit LD decay curve
 # Submit: sbatch 01_scripts/bash/03B_ld_decay.sh
 # =============================================================================
 #SBATCH -J "03B_ld_decay"

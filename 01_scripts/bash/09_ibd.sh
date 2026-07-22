@@ -1,9 +1,9 @@
 #!/bin/bash
 # =============================================================================
-# 09_ibd.sh — Isolation by Distance (Mantel test, FST/(1-FST) vs hydro distance)
+# 09_ibd.sh -- Isolation by Distance (Mantel test, FST/(1-FST) vs hydro distance)
 #
 # PREREQUISITE: run 01_scripts/R/compute_hydro_distances.R first (separate
-# conda env with 'marmap' — see that script's header) to produce
+# conda env with 'marmap' -- see that script's header) to produce
 # ${IBD_DIR}/hydro_distances.csv, which ibd_analysis.R reads.
 #
 # Submit: sbatch 01_scripts/bash/09_ibd.sh

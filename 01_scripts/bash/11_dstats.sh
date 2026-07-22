@@ -1,14 +1,14 @@
 #!/bin/bash
 # =============================================================================
-# 11_dstats.sh — D-statistics (ABBA-BABA) via ANGSD doAbbababa2
+# 11_dstats.sh -- D-statistics (ABBA-BABA) via ANGSD doAbbababa2
 # Tests Atlantic introgression (LLS) -> Kivalliq Canadian populations,
 # using DV (Dolly Varden, Babbage River) as the distant outgroup (H4).
 #
 # D topology tested: D(H1, H2 ; H3, H4)
 #   H1 = JAY (pure Beringian Arctic reference, Kitikmeot)
 #   H2 = pop_test (each Kivalliq population in turn)
-#   H3 = LLS (Sweden, Atlantic — potential introgression source)
-#   H4 = DV  (Dolly Varden, S. malma — distant outgroup)
+#   H3 = LLS (Sweden, Atlantic -- potential introgression source)
+#   H4 = DV  (Dolly Varden, S. malma -- distant outgroup)
 #
 # Positive D + |Z| > 3 : pop_test shares more alleles with LLS than JAY does
 #                        => Atlantic introgression in pop_test
@@ -152,7 +152,7 @@ if [[ -f "$ANGSD_R_SCRIPT" ]]; then
         nameFile=<(printf "%s\n%s\n%s\n%s\n" "$H1_POP" "$H2_POP" "$H3_POP" "$H4_POP")
     log_msg "  D-stat written: ${TRIO_PREFIX}_Dstat.txt"
 else
-    log_msg "  WARNING: ANGSD R script not found at $ANGSD_R_SCRIPT — set ANGSD_DIR in 00_config.sh"
+    log_msg "  WARNING: ANGSD R script not found at $ANGSD_R_SCRIPT -- set ANGSD_DIR in 00_config.sh"
 fi
 
 log_msg "=== D-STAT $H2_POP COMPLETE ==="

@@ -1,5 +1,5 @@
 # =============================================================================
-# pca_eigen.R — Eigendecomposition of PCAngsd covariance matrix
+# pca_eigen.R -- Eigendecomposition of PCAngsd covariance matrix
 # Usage: Rscript pca_eigen.R <cov_matrix_file> <bam_filelist>
 # =============================================================================
 

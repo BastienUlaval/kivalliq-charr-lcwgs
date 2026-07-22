@@ -9,7 +9,7 @@
 #SBATCH --array=0-1
 
 # =============================================================================
-# 10D_triangle_anchor_maf.sh — Compute per-pop MAF for LLS and JAY anchors
+# 10D_triangle_anchor_maf.sh -- Compute per-pop MAF for LLS and JAY anchors
 # Strategy:
 #   1. Call SNPs once on combined Kivalliq+LLS+JAY dataset (-SNP_pval)
 #      to obtain a shared site list (sites + chrs file)

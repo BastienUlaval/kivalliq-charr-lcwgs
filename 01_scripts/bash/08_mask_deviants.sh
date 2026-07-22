@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 08_mask_deviants.sh — Mask deviant (paralogous) regions in the genome
+# 08_mask_deviants.sh -- Mask deviant (paralogous) regions in the genome
 # Creates a masked reference genome for demographic inference
 # Submit: sbatch 01_scripts/bash/08_mask_deviants.sh
 # =============================================================================
@@ -28,10 +28,10 @@ require_file "${INFO_DIR}/genome.fasta.fai"
 
 mkdir -p "${INFO_DIR}/mask_by_chr"
 
-# ─── Step 1: R script to detect deviants and create BED masks ────────────────
+# --- Step 1: R script to detect deviants and create BED masks ----------------
 "$RSCRIPT" 01_scripts/R/deviant_masking.R "$MASK_LENGTH" "${NGSPARALOG_DIR}" "${INFO_DIR}"
 
-# ─── Step 2: Combine all BED files ──────────────────────────────────────────
+# --- Step 2: Combine all BED files ------------------------------------------
 COMBINED_BED="${INFO_DIR}/mask_deviants_combined.bed"
 cat "${INFO_DIR}/mask_by_chr/"mask_deviant_chr*.bed | \
     sort -k1,1 -k2,2n | \
@@ -43,7 +43,7 @@ PCT=$(echo "scale=2; $TOTAL_MASKED * 100 / $GENOME_SIZE" | bc)
 
 log_msg "  Masked: ${TOTAL_MASKED} bp (${PCT}% of genome)"
 
-# ─── Step 3: Mask the genome FASTA ──────────────────────────────────────────
+# --- Step 3: Mask the genome FASTA ------------------------------------------
 log_msg "Masking genome FASTA..."
 
 MASKED_GENOME="${INFO_DIR}/genome_masked_deviants.fasta"

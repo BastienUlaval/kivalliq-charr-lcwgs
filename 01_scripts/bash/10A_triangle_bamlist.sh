@@ -8,7 +8,7 @@
 #SBATCH --error=99_logs/10A_%j.err
 
 # =============================================================================
-# 10A_triangle_bamlist.sh — Build combined bamlist: Kivalliq (13 pops) + LLS + JAY
+# 10A_triangle_bamlist.sh -- Build combined bamlist: Kivalliq (13 pops) + LLS + JAY
 # Output: 02_info/bamlists/triangle.bamlist (1 BAM path per line)
 #         02_info/bamlists/triangle.popmap   (BAM \t POP \t REGION)
 # =============================================================================

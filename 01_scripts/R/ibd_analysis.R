@@ -1,5 +1,5 @@
 # =============================================================================
-# ibd_analysis.R — Isolation by Distance (4-panel: Global, Global-noHOR,
+# ibd_analysis.R -- Isolation by Distance (4-panel: Global, Global-noHOR,
 #   Naujaat, Rankin) with Mantel tests
 #   Distance types: Euclidean (Haversine) + Hydrographic (from file or placeholder)
 # Usage: Rscript ibd_analysis.R <fst_file> <info_dir> <fig_dir> <table_dir> [hydro_dist_file]
@@ -22,7 +22,7 @@ suppressPackageStartupMessages({
 dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(table_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ─── 1. COORDINATES ─────────────────────────────────────────────────────────
+# --- 1. COORDINATES ---------------------------------------------------------
 coords <- data.frame(
     Pop = c("AKL","AUL","CRB","DIA","MEL","HOR","ITI","KGJ","NOP","PAM","TIN","SUP","WHI"),
     Lat = c(62.8372049, 62.905473, 62.466667, 62.833333, 62.866667, 64.723358,
@@ -31,7 +31,7 @@ coords <- data.frame(
             -84.4652392, -85.254424, -86.883333, -87.055555, -84.4398478, -86.716667, -85.0426395)
 )
 
-# ─── 2. REGION DEFINITIONS ──────────────────────────────────────────────────
+# --- 2. REGION DEFINITIONS --------------------------------------------------
 rankin_pops  <- c("AKL","AUL","CRB","DIA","MEL")
 naujaat_pops <- c("ITI","KGJ","NOP","PAM","SUP","TIN","WHI")
 
@@ -41,7 +41,7 @@ get_region <- function(p) {
     return("Baker Lake")
 }
 
-# ─── 3. HAVERSINE DISTANCE (km) ─────────────────────────────────────────────
+# --- 3. HAVERSINE DISTANCE (km) ---------------------------------------------
 haversine_km <- function(lat1, lon1, lat2, lon2) {
     R <- 6371  # Earth radius in km
     dlat <- (lat2 - lat1) * pi / 180
@@ -50,7 +50,7 @@ haversine_km <- function(lat1, lon1, lat2, lon2) {
     return(2 * R * asin(sqrt(a)))
 }
 
-# ─── 4. LOAD FST DATA ───────────────────────────────────────────────────────
+# --- 4. LOAD FST DATA -------------------------------------------------------
 fst <- read.delim(fst_file, header = TRUE)
 fst$Fst_lin <- fst$Fst_weighted / (1 - fst$Fst_weighted)
 
@@ -64,7 +64,7 @@ fst$Euclidean_km <- mapply(function(p1, p2) {
     return(NA)
 }, fst$Pop1, fst$Pop2)
 
-# ─── 5. HYDROGRAPHIC DISTANCES ──────────────────────────────────────────────
+# --- 5. HYDROGRAPHIC DISTANCES ----------------------------------------------
 # If a hydro distance file is provided, load it
 # Expected format: CSV with columns Pop1, Pop2, Hydro_km
 if (!is.null(hydro_file) && file.exists(hydro_file)) {
@@ -94,7 +94,7 @@ fst$Comparison <- mapply(function(r1, r2) {
     return("Inter-region")
 }, fst$Region1, fst$Region2)
 
-# ─── 6. MANTEL TEST FUNCTION ────────────────────────────────────────────────
+# --- 6. MANTEL TEST FUNCTION ------------------------------------------------
 run_mantel <- function(data_sub, dist_col, label) {
     pops_sub <- unique(c(data_sub$Pop1, data_sub$Pop2))
     n <- length(pops_sub)
@@ -124,7 +124,7 @@ run_mantel <- function(data_sub, dist_col, label) {
                       R2 = round(r2, 4)))
 }
 
-# ─── 7. RUN MANTEL TESTS ────────────────────────────────────────────────────
+# --- 7. RUN MANTEL TESTS ----------------------------------------------------
 fst_complete <- fst[!is.na(fst$Euclidean_km), ]
 fst_no_hor <- fst_complete[fst_complete$Pop1 != "HOR" & fst_complete$Pop2 != "HOR", ]
 fst_rankin <- fst_complete[fst_complete$Region1 == "Rankin Inlet" & fst_complete$Region2 == "Rankin Inlet", ]
@@ -156,7 +156,7 @@ cat("\n=== MANTEL TEST RESULTS ===\n")
 print(results)
 write.csv(results, file.path(table_dir, "Table_IBD_Mantel.csv"), row.names = FALSE)
 
-# ─── 8. PLOT HELPER ─────────────────────────────────────────────────────────
+# --- 8. PLOT HELPER ---------------------------------------------------------
 make_ibd_panel <- function(data_sub, dist_col, title_text, point_color,
                            mantel_r, mantel_p, show_y_lab = TRUE) {
 
@@ -202,7 +202,7 @@ make_ibd_panel <- function(data_sub, dist_col, title_text, point_color,
     return(p)
 }
 
-# ─── 9. GENERATE FIGURES ────────────────────────────────────────────────────
+# --- 9. GENERATE FIGURES ----------------------------------------------------
 
 # Colors for comparison types
 comparison_colors <- c("Rankin Inlet" = "#31688E", "Naujaat" = "#35B779",
@@ -265,7 +265,7 @@ get_stats <- function(group, dist) {
     return(list(r = row$Mantel_r, p = row$Mantel_p))
 }
 
-# ─── Euclidean 4-panel ──────────────────────────────────────────────────────
+# --- Euclidean 4-panel ------------------------------------------------------
 s1 <- get_stats("Global", "Euclidean_km")
 s2 <- get_stats("Global (sans HOR)", "Euclidean_km")
 s3 <- get_stats("Naujaat", "Euclidean_km")
@@ -282,7 +282,7 @@ p4 <- make_ibd_panel(fst_rankin, "Euclidean_km", "Rankin Inlet",
 
 p_eucl <- (p1 | p2) / (p3 | p4) +
     plot_layout(guides = "collect") +
-    plot_annotation(title = "Isolation by Distance — Euclidean (Haversine)",
+    plot_annotation(title = "Isolation by Distance -- Euclidean (Haversine)",
                     theme = theme(plot.title = element_text(face = "bold", size = 14, hjust = 0.5))) &
     theme(legend.position = "bottom")
 
@@ -301,7 +301,7 @@ ggsave(file.path(fig_dir, "Fig_IBD_euclidean_rankin.png"), p4,
 
 cat("Euclidean IBD figures saved (combined + 4 individual).\n")
 
-# ─── Hydrographic 4-panel (if available) ─────────────────────────────────────
+# --- Hydrographic 4-panel (if available) -------------------------------------
 if (has_hydro) {
     fst_hydro <- fst[!is.na(fst$Hydro_km), ]
     fst_hydro_no_hor <- fst_hydro[fst_hydro$Pop1 != "HOR" & fst_hydro$Pop2 != "HOR", ]
@@ -323,7 +323,7 @@ if (has_hydro) {
                            "#31688E", h4$r, h4$p, FALSE)
 
     p_hydro <- (ph1 | ph2) / (ph3 | ph4) +
-        plot_annotation(title = "Isolation by Distance — Hydrographic",
+        plot_annotation(title = "Isolation by Distance -- Hydrographic",
                         theme = theme(plot.title = element_text(face = "bold", size = 14, hjust = 0.5)))
 
     ggsave(file.path(fig_dir, "Fig_IBD_hydrographic.png"), p_hydro,
@@ -331,7 +331,7 @@ if (has_hydro) {
     cat("Hydrographic IBD figure saved.\n")
 }
 
-# ─── Save full pairwise data ────────────────────────────────────────────────
+# --- Save full pairwise data ------------------------------------------------
 write.csv(fst, file.path(table_dir, "Table_IBD_pairwise.csv"), row.names = FALSE)
 
 cat("=== IBD ANALYSIS COMPLETE ===\n")

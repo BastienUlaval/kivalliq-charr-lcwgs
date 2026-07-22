@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 04_pca.sh — PCA via PCAngsd (global, Rankin, Naujaat)
+# 04_pca.sh -- PCA via PCAngsd (global, Rankin, Naujaat)
 # Submit: sbatch 01_scripts/bash/04_pca.sh
 # =============================================================================
 #SBATCH -J "04_pca"
@@ -22,7 +22,7 @@ PYTHON_ENV="${PCANGSD_ENV}/bin/python"
 require_file "$PYTHON_ENV" "PCAngsd Python"
 export PATH="${PCANGSD_ENV}/bin:$PATH"
 
-# ─── Helper function ────────────────────────────────────────────────────────
+# --- Helper function --------------------------------------------------------
 run_pcangsd() {
     local beagle="$1"
     local out_prefix="$2"
@@ -54,7 +54,7 @@ run_pcangsd() {
     fi
 }
 
-# ─── Run three analyses ─────────────────────────────────────────────────────
+# --- Run three analyses -----------------------------------------------------
 GLOBAL_BEAGLE="${LD_DIR}/all_${SUFFIX}.prunednosex.beagle.gz"
 RANKIN_BEAGLE="${LD_DIR}/rankin_${SUFFIX}.prunednosex.beagle.gz"
 NAUJAAT_BEAGLE="${LD_DIR}/naujaat_${SUFFIX}.prunednosex.beagle.gz"
@@ -74,7 +74,7 @@ run_pcangsd "$NAUJAAT_BEAGLE" \
     "${INFO_DIR}/bamlists/naujaat.bamlist" \
     "NAUJAAT"
 
-# ─── Produce publication figures ─────────────────────────────────────────────
+# --- Produce publication figures ---------------------------------------------
 log_msg "Generating publication-quality PCA figures..."
 
 "$RSCRIPT" 01_scripts/R/plot_pca.R \

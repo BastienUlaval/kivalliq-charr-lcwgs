@@ -1,5 +1,5 @@
 # =============================================================================
-# sum_2dsfs.R — Sum multi-line 2D-SFS into single line
+# sum_2dsfs.R -- Sum multi-line 2D-SFS into single line
 # Usage: Rscript sum_2dsfs.R <2dsfs_file>
 # =============================================================================
 

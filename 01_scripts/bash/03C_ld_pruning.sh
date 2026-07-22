@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 03C_ld_pruning.sh — LD prune per chromosome with ngsLD
+# 03C_ld_pruning.sh -- LD prune per chromosome with ngsLD
 # Submit: cat regions_number.txt | parallel -j20 \
 #   srun -p medium -c 1 --mem=20G --time=7-00:00 \
 #   01_scripts/bash/03C_ld_pruning.sh {}
@@ -27,7 +27,7 @@ fi
 require_file "$INPUT_LD" "LD file chr${REGION_NUM}"
 require_file "$BEAGLE_IN" "Beagle chr${REGION_NUM}"
 
-log_msg "=== LD PRUNING — chr${CHR_NUM} ==="
+log_msg "=== LD PRUNING -- chr${CHR_NUM} ==="
 
 # Check data lines
 DATA_LINES=$(tail -n +2 "$INPUT_LD" | wc -l)

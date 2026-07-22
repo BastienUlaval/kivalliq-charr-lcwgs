@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 01_ngsparalog.sh — Identify paralogous (deviant) sites with ngsParalog
+# 01_ngsparalog.sh -- Identify paralogous (deviant) sites with ngsParalog
 # Runs per chromosome via SLURM array
 # Submit: sbatch 01_scripts/bash/01_ngsparalog.sh
 # =============================================================================
@@ -21,7 +21,7 @@ module load angsd/0.931
 module load samtools
 ulimit -S -n 2048
 
-# ─── Parameters ──────────────────────────────────────────────────────────────
+# --- Parameters --------------------------------------------------------------
 NB_CPU=4
 REGION_NUM="${SLURM_ARRAY_TASK_ID}"
 REGION=$(sed -n "${REGION_NUM}p" "${INFO_DIR}/regions.txt")
@@ -32,7 +32,7 @@ read -r N_IND MIN_IND MAX_DEPTH <<< "$(compute_filters "$BAMLIST")"
 log_msg "=== CHROMOSOME ${REGION_NUM} : ${REGION} ==="
 log_msg "N=${N_IND}, MIN_IND=${MIN_IND}, MAX_DEPTH=${MAX_DEPTH}"
 
-# ─── Step 1: Call SNPs with ANGSD (MAF + quality filters) ───────────────────
+# --- Step 1: Call SNPs with ANGSD (MAF + quality filters) -------------------
 log_msg "Step 1: ANGSD SNP calling..."
 
 angsd -P $NB_CPU -nQueueSize 20 \
@@ -44,7 +44,7 @@ angsd -P $NB_CPU -nQueueSize 20 \
   -b "$BAMLIST" -r "$REGION" \
   -out "${NGSPARALOG_DIR}/all_${SUFFIX}_chr${REGION_NUM}"
 
-# ─── Step 2: Extract site positions ─────────────────────────────────────────
+# --- Step 2: Extract site positions -----------------------------------------
 log_msg "Step 2: Extracting site positions..."
 
 gunzip -f "${NGSPARALOG_DIR}/all_${SUFFIX}_chr${REGION_NUM}.mafs.gz"
@@ -57,7 +57,7 @@ BED="${INFO_DIR}/sites_by_chr/sites_${SUFFIX}_chr${REGION_NUM}.bed"
 angsd sites index "$SITES"
 awk '{print $1"\t"$2-1"\t"$2}' "$SITES" > "$BED"
 
-# ─── Step 3: Run ngsParalog ─────────────────────────────────────────────────
+# --- Step 3: Run ngsParalog -------------------------------------------------
 log_msg "Step 3: Running ngsParalog..."
 
 samtools mpileup -b "$BAMLIST" -l "$BED" -r "$REGION" -q 0 -Q 0 --ff UNMAP,DUP | \
@@ -66,7 +66,7 @@ samtools mpileup -b "$BAMLIST" -l "$BED" -r "$REGION" -q 0 -Q 0 --ff UNMAP,DUP |
     -outfile "${NGSPARALOG_DIR}/all_${SUFFIX}_chr${REGION_NUM}.ngsparalog" \
     -minQ 20 -minind "$MIN_IND" -mincov "$MIN_DEPTH" -allow_overwrite 1
 
-# ─── Step 4: Separate canonical / deviant sites ─────────────────────────────
+# --- Step 4: Separate canonical / deviant sites -----------------------------
 log_msg "Step 4: Classifying canonical vs deviant..."
 
 "$RSCRIPT" 01_scripts/R/classify_paralog.R \

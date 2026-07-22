@@ -1,5 +1,5 @@
 # =============================================================================
-# classify_paralog.R — Separate canonical from deviant (paralogous) sites
+# classify_paralog.R -- Separate canonical from deviant (paralogous) sites
 # Usage: Rscript classify_paralog.R <ngsP_file> <deviant_out> <keep_out> <threshold>
 # =============================================================================
 argv <- commandArgs(TRUE)

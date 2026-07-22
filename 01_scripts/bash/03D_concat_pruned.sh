@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 03D_concat_pruned.sh — Concatenate pruned Beagles; create nosex + regional subsets
+# 03D_concat_pruned.sh -- Concatenate pruned Beagles; create nosex + regional subsets
 # Run AFTER all 03C array jobs complete
 # Submit: sbatch 01_scripts/bash/03D_concat_pruned.sh
 # =============================================================================
@@ -22,7 +22,7 @@ BAMLIST="${INFO_DIR}/bam.filelist"
 TEMP="${LD_DIR}/all_${SUFFIX}.pruned.beagle"
 OUT_ALL="${LD_DIR}/all_${SUFFIX}.pruned.beagle.gz"
 
-# ─── 1. Concatenate all chromosomes ─────────────────────────────────────────
+# --- 1. Concatenate all chromosomes -----------------------------------------
 FIRST=$(ls "${LD_DIR}/beagle_pruned/"*.pruned.beagle.gz 2>/dev/null | sort | head -1)
 require_file "$FIRST" "First pruned beagle"
 
@@ -38,7 +38,7 @@ done
 gzip -f "$TEMP"
 log_msg "  All chromosomes: ${TOTAL} SNPs"
 
-# ─── 2. Create nosex version (exclude sex-linked chromosomes) ────────────────
+# --- 2. Create nosex version (exclude sex-linked chromosomes) ----------------
 log_msg "Filtering sex chromosomes..."
 
 OUT_NOSEX="${LD_DIR}/all_${SUFFIX}.prunednosex.beagle.gz"
@@ -52,7 +52,7 @@ zcat "$OUT_ALL" | tail -n +2 | grep -vE "$SEX_PATTERN" | gzip >> "$OUT_NOSEX"
 N_NOSEX=$(zcat "$OUT_NOSEX" | tail -n +2 | wc -l)
 log_msg "  Autosomal pruned SNPs: ${N_NOSEX}"
 
-# ─── 3. Create regional subsets ─────────────────────────────────────────────
+# --- 3. Create regional subsets ---------------------------------------------
 log_msg "Creating regional Beagle subsets..."
 
 # Rankin Inlet
@@ -77,7 +77,7 @@ mv "${OUT_NOSEX%.beagle.gz}.subset.beagle.gz" \
 N_NAUJAAT=$(zcat "${LD_DIR}/naujaat_${SUFFIX}.prunednosex.beagle.gz" | head -1 | awk '{print (NF-3)/3}')
 log_msg "  Naujaat: ${N_NAUJAAT} individuals"
 
-# ─── 4. Create LD-pruned sites list (for downstream ANGSD calls) ────────────
+# --- 4. Create LD-pruned sites list (for downstream ANGSD calls) ------------
 log_msg "Extracting pruned site positions..."
 
 PRUNED_SITES="${INFO_DIR}/sites_ldpruned_${SUFFIX}_nosex"

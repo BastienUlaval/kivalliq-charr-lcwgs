@@ -1,5 +1,5 @@
 # =============================================================================
-# plot_pca.R — Publication-quality PCA figures
+# plot_pca.R -- Publication-quality PCA figures
 # Handles saal* prefix in BAM names
 # Produces: composite + individual global, rankin, naujaat figures
 # Usage: Rscript plot_pca.R <pca_dir> <info_file> <fig_dir>
@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
 
 dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ─── Population color palette (colorblind-friendly) ─────────────────────────
+# --- Population color palette (colorblind-friendly) -------------------------
 pop_colors <- c(
     AKL = "#443983", AUL = "#31B8BD", CRB = "#5DC863",
     DIA = "#3B528B", MEL = "#21918C",
@@ -36,7 +36,7 @@ pop_region <- c(
     SUP = "Naujaat", TIN = "Naujaat", WHI = "Naujaat"
 )
 
-# ─── Extract population code from BAM path ───────────────────────────────────
+# --- Extract population code from BAM path -----------------------------------
 extract_pop <- function(bam_path) {
     # Get filename without path and extension
     fname <- gsub(".*/", "", bam_path)
@@ -50,7 +50,7 @@ extract_pop <- function(bam_path) {
     return(pop)
 }
 
-# ─── Helper: load PCA + make plot ────────────────────────────────────────────
+# --- Helper: load PCA + make plot --------------------------------------------
 make_pca_plot <- function(prefix, label, pc_x = 1, pc_y = 2, point_size = 2) {
     pca_file <- paste0(prefix, ".cov.pca")
     eig_file <- paste0(prefix, ".cov.eig")
@@ -98,14 +98,14 @@ make_pca_plot <- function(prefix, label, pc_x = 1, pc_y = 2, point_size = 2) {
     return(p)
 }
 
-# ─── Build file prefix ──────────────────────────────────────────────────────
+# --- Build file prefix ------------------------------------------------------
 suffix <- "maf0.05_pctind0.50_maxdepth8"
 
 global_prefix <- file.path(pca_dir, paste0("global_", suffix, "_prunednosex"))
 rankin_prefix <- file.path(pca_dir, paste0("rankin_", suffix, "_prunednosex"))
 naujaat_prefix <- file.path(pca_dir, paste0("naujaat_", suffix, "_prunednosex"))
 
-# ─── Composite figure (4 panels) ────────────────────────────────────────────
+# --- Composite figure (4 panels) --------------------------------------------
 cat("Generating composite PCA figure...\n")
 
 p_global_12 <- make_pca_plot(global_prefix, "A) All populations", 1, 2)
@@ -125,11 +125,11 @@ if (!is.null(p_global_12) & !is.null(p_rankin)) {
     cat("  Composite saved.\n")
 }
 
-# ─── Individual figures ──────────────────────────────────────────────────────
+# --- Individual figures ------------------------------------------------------
 cat("Generating individual PCA figures...\n")
 
 # Global PC1-2
-p <- make_pca_plot(global_prefix, "All populations — PC1 vs PC2", 1, 2, point_size = 2.5)
+p <- make_pca_plot(global_prefix, "All populations -- PC1 vs PC2", 1, 2, point_size = 2.5)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_global_PC12.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_global_PC12.png"), p, width = 9, height = 7, dpi = 300)
@@ -137,7 +137,7 @@ if (!is.null(p)) {
 }
 
 # Global PC3-4
-p <- make_pca_plot(global_prefix, "All populations — PC3 vs PC4", 3, 4, point_size = 2.5)
+p <- make_pca_plot(global_prefix, "All populations -- PC3 vs PC4", 3, 4, point_size = 2.5)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_global_PC34.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_global_PC34.png"), p, width = 9, height = 7, dpi = 300)
@@ -145,7 +145,7 @@ if (!is.null(p)) {
 }
 
 # Rankin PC1-2
-p <- make_pca_plot(rankin_prefix, "Rankin Inlet — PC1 vs PC2", 1, 2, point_size = 3)
+p <- make_pca_plot(rankin_prefix, "Rankin Inlet -- PC1 vs PC2", 1, 2, point_size = 3)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_rankin_PC12.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_rankin_PC12.png"), p, width = 9, height = 7, dpi = 300)
@@ -153,7 +153,7 @@ if (!is.null(p)) {
 }
 
 # Rankin PC3-4
-p <- make_pca_plot(rankin_prefix, "Rankin Inlet — PC3 vs PC4", 3, 4, point_size = 3)
+p <- make_pca_plot(rankin_prefix, "Rankin Inlet -- PC3 vs PC4", 3, 4, point_size = 3)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_rankin_PC34.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_rankin_PC34.png"), p, width = 9, height = 7, dpi = 300)
@@ -161,7 +161,7 @@ if (!is.null(p)) {
 }
 
 # Naujaat PC1-2
-p <- make_pca_plot(naujaat_prefix, "Naujaat — PC1 vs PC2", 1, 2, point_size = 3)
+p <- make_pca_plot(naujaat_prefix, "Naujaat -- PC1 vs PC2", 1, 2, point_size = 3)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_naujaat_PC12.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_naujaat_PC12.png"), p, width = 9, height = 7, dpi = 300)
@@ -169,7 +169,7 @@ if (!is.null(p)) {
 }
 
 # Naujaat PC3-4
-p <- make_pca_plot(naujaat_prefix, "Naujaat — PC3 vs PC4", 3, 4, point_size = 3)
+p <- make_pca_plot(naujaat_prefix, "Naujaat -- PC3 vs PC4", 3, 4, point_size = 3)
 if (!is.null(p)) {
     ggsave(file.path(fig_dir, "Fig_PCA_naujaat_PC34.pdf"), p, width = 9, height = 7, dpi = 300)
     ggsave(file.path(fig_dir, "Fig_PCA_naujaat_PC34.png"), p, width = 9, height = 7, dpi = 300)
@@ -177,7 +177,7 @@ if (!is.null(p)) {
 }
 
 
-# ─── Versions with 95% ellipses ─────────────────────────────────────────────
+# --- Versions with 95% ellipses ---------------------------------------------
 cat("Generating PCA figures with ellipses...\n")
 
 add_ellipse <- function(p) {

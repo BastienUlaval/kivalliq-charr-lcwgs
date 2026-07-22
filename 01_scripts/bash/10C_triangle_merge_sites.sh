@@ -8,7 +8,7 @@
 #SBATCH --error=99_logs/10C_%j.err
 
 # =============================================================================
-# 10C_triangle_merge_sites.sh — Consolidate per-chromosome MAFs into a shared site list
+# 10C_triangle_merge_sites.sh -- Consolidate per-chromosome MAFs into a shared site list
 #
 # Input : 26_triangle/sites/per_chr/triangle_sites_<chr>.mafs.gz  (one per chr)
 # Output: 26_triangle/sites/triangle_sites.sites   (chr  pos  major  minor)
