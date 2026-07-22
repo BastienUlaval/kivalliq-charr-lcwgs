@@ -8,7 +8,7 @@
 #SBATCH --error=99_logs/10E_%j.err
 
 # =============================================================================
-# 10E_triangle_diagnostic_beagle.sh — Identify diagnostic SNPs (delta-AF > 0.5 between LLS and JAY)
+# 10E_triangle_diagnostic_beagle.sh -- Identify diagnostic SNPs (delta-AF > 0.5 between LLS and JAY)
 #       AND extract Beagle GLs at those sites for ALL individuals
 #
 # Inputs : 26_triangle/maf_anchors/{LLS,JAY}.mafs.gz  (per-anchor MAFs)
@@ -32,7 +32,7 @@ JAY_MAF="$OUTDIR/maf_anchors/JAY.mafs.gz"
 
 echo "=== Identifying diagnostic SNPs (|MAF_LLS - MAF_JAY| > $THRESHOLD) ==="
 
-# ─── Join LLS and JAY MAFs on chr+pos+major+minor ────────────────────────────
+# --- Join LLS and JAY MAFs on chr+pos+major+minor ----------------------------
 # .mafs.gz columns: chromo, position, major, minor, ref/anc?, knownEM, nInd
 # We use 'knownEM' as the major-allele frequency since -doMajorMinor 3 was used
 # in 10D_triangle_anchor_maf.sh (consistent major/minor across pops).
@@ -88,7 +88,7 @@ with open("26_triangle/diagnostic_snps.tsv", "w") as out:
 print(f"  Diagnostic SNPs (dAF > {THRESHOLD}): {n_diag:,}", flush=True)
 PYEOF
 
-# ─── Build ANGSD sites file & chr list for diagnostic SNPs ───────────────────
+# --- Build ANGSD sites file & chr list for diagnostic SNPs -------------------
 tail -n +2 "$OUTDIR/diagnostic_snps.tsv" | \
     awk 'BEGIN{OFS="\t"} {print $1, $2, $3, $4}' \
     > "$OUTDIR/diagnostic_sites.sites"
@@ -102,7 +102,7 @@ echo "Diagnostic sites file: $OUTDIR/diagnostic_sites.sites"
 echo "  N SNPs: $N_DIAG"
 echo "  N chromosomes: $(wc -l < "$OUTDIR/diagnostic_sites.chrs")"
 
-# ─── Extract Beagle GLs for ALL individuals at diagnostic SNPs ───────────────
+# --- Extract Beagle GLs for ALL individuals at diagnostic SNPs ---------------
 echo ""
 echo "=== Extracting Beagle GLs at diagnostic SNPs (Kivalliq + LLS + JAY) ==="
 

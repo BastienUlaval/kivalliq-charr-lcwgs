@@ -1,6 +1,6 @@
 # Kivalliq Arctic charr lcWGS pipeline
 
-Population genomics pipeline for Chapter 1 (CJFAS manuscript) — fine-scale
+Population genomics pipeline for Chapter 1 (CJFAS manuscript) -- fine-scale
 regional structure and Atlantic-Arctic introgression in anadromous Arctic
 charr (*Salvelinus alpinus*) across 13 populations (405 individuals) in the
 Kivalliq region, Nunavut.
@@ -15,7 +15,8 @@ not included.
 
 - SLURM cluster with ANGSD, ngsParalog, ngsLD, NGSadmix, PCAngsd installed
 - R with `data.table`, `ggplot2`, `dplyr`, `tidyr`, `patchwork`, `vegan`,
-  `ape`, `viridisLite`, `sf`, `ggspatial`, `ggrepel`, `marmap`
+  `readr`, `reshape2`, `scales`, `stringr`, `viridisLite`, `sf`,
+  `ggspatial`, `ggrepel`, `GenomicRanges`, `marmap`
   (marmap only needed for `compute_hydro_distances.R`, in its own env)
 - Python 3 (utility scripts, standard library only)
 

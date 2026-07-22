@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 00_setup.sh — Initialize angsd_pipeline2 directory structure
+# 00_setup.sh -- Initialize angsd_pipeline2 directory structure
 # Run ONCE before launching any analysis
 # Usage: bash 01_scripts/bash/00_setup.sh
 # =============================================================================
@@ -10,9 +10,9 @@ source config/00_config.sh
 
 log_msg "=== SETTING UP ANGSD PIPELINE 2 ==="
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 1. Create directory tree
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "Creating directory structure..."
 
 dirs=(
@@ -37,9 +37,9 @@ done
 
 log_msg "  Created $(echo ${#dirs[@]}) directories."
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 2. Symlink the genome reference
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "Symlinking genome reference..."
 
 for ext in "" ".fai" ".dict"; do
@@ -55,9 +55,9 @@ if [[ -f "$GENOME_MASKED" ]] && [[ ! -e "${INFO_DIR}/genome_masked.fasta" ]]; th
     ln -s "$GENOME_MASKED" "${INFO_DIR}/genome_masked.fasta"
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 3. Copy essential metadata from your existing BAM/metadata source
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "Copying metadata from SOURCE_INFO_DIR..."
 
 # BAM filelist
@@ -85,9 +85,9 @@ if [[ -f "${SOURCE_INFO_DIR}/info.txt" ]]; then
     cp "${SOURCE_INFO_DIR}/info.txt" "${INFO_DIR}/info.txt"
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 4. Generate BAM filelists by population
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "Generating per-population BAM filelists..."
 
 if [[ -f "${INFO_DIR}/bam.filelist" ]] && [[ -f "${INFO_DIR}/pop.txt" ]]; then
@@ -110,9 +110,9 @@ for pop in $NAUJAAT_POPS; do
     cat "${INFO_DIR}/bamlists/${pop}.bamlist" >> "${INFO_DIR}/bamlists/naujaat.bamlist" 2>/dev/null || true
 done
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 5. Create regions file without sex chromosomes
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "Creating autosomal regions file..."
 
 if [[ -f "${INFO_DIR}/regions.txt" ]]; then
@@ -123,9 +123,9 @@ if [[ -f "${INFO_DIR}/regions.txt" ]]; then
     log_msg "  Autosomal regions: ${n_auto} / ${n_all} total"
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 # 6. Summary
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 log_msg "=== SETUP COMPLETE ==="
 echo ""
 echo "Pipeline root:  ${BASE_DIR}"
@@ -134,7 +134,7 @@ echo "Regions:        $(wc -l < "${INFO_DIR}/regions.txt" 2>/dev/null || echo 'N
 echo "Populations:    $(wc -l < "${INFO_DIR}/pop.txt" 2>/dev/null || echo 'N/A') populations"
 echo ""
 echo "NOTE: bamlists for the reference populations (JAY, LLS, DV) are not"
-echo "generated here — place them manually at \${INFO_DIR}/bamlists/{JAY,LLS,DV}.bamlist"
+echo "generated here -- place them manually at \${INFO_DIR}/bamlists/{JAY,LLS,DV}.bamlist"
 echo "before running the triangle-plot or D-stats scripts (12*, 13*)."
 echo ""
 echo "Next step: submit 01_ngsparalog.sh"

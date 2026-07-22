@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# plot_panel_global_structure.R  — Figure 2 (CJFAS Kivalliq Arctic charr)
+# plot_panel_global_structure.R  -- Figure 2 (CJFAS Kivalliq Arctic charr)
 #
 # 2-panel composite:
 #   a) Global PCA (13 pops, PC1 vs PC2, 95% ellipses per region)
@@ -9,7 +9,7 @@
 # K=7 chosen as the best-supported consensus across Puechmaille (2016)
 # estimators (MedMedK, MedMeaK, MaxMedK, MaxMeaK), computed via the
 # StructureSelector web tool (Li & Liu 2018) from the NGSadmix per-replicate
-# ancestry matrices and log-likelihoods — not by a script in this repo.
+# ancestry matrices and log-likelihoods -- not by a script in this repo.
 # Evanno deltaK alone was judged unreliable here (bias under unbalanced
 # sampling; see manuscript Methods).
 #
@@ -27,7 +27,7 @@
 #                   99_figures/)
 #     shp_dir     = directory with the 3 basemap shapefiles (Statistics Canada
 #                   boundary files lpr_000b21a_e.shp + NRCan CanVec
-#                   waterbody_2.shp / watercourse_1.shp — not included in this
+#                   waterbody_2.shp / watercourse_1.shp -- not included in this
 #                   repo, see README)
 #     r_lib_path  = optional, only needed if packages are not on the default
 #                   R library path (passed to .libPaths())
@@ -53,7 +53,7 @@ suppressPackageStartupMessages({
 })
 sf_use_s2(FALSE)
 
-# ─── CONFIG (derived from base_dir/shp_dir arguments) ────────────────────────
+# --- CONFIG (derived from base_dir/shp_dir arguments) ------------------------
 PCA_DIR   <- file.path(BASE_DIR, "04_pca")
 ADMIX_DIR <- file.path(BASE_DIR, "05_admixture", "global")
 LOG_DIR   <- ADMIX_DIR                       # NGSadmix .log files live alongside .qopt
@@ -70,7 +70,7 @@ GLOBAL_K            <- 7
 
 dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 
-# ─── PALETTE (Okabe-Ito, from plot_pca_v2.R) ─────────────────────────────────
+# --- PALETTE (Okabe-Ito, from plot_pca_v2.R) ---------------------------------
 POP_COLORS <- c(
     "HOR" = "#009E73",
     "PAM" = "#0072B2", "NOP" = "#56B4E9", "TIN" = "#4E79A7",
@@ -89,7 +89,7 @@ POP_REGION <- c(
 POP_ORDER <- c("AKL","AUL","CRB","DIA","MEL","HOR",
                "ITI","KGJ","NOP","PAM","SUP","TIN","WHI")
 
-# ─── HELPERS (match plot_pca.R conventions) ─────────────────────────────────
+# --- HELPERS (match plot_pca.R conventions) ---------------------------------
 extract_pop <- function(bam_path) {
     # Extracts the 3-letter population code from a BAM filename: ".*saal(XXX).*" -> XXX
     toupper(sub(".*saal([A-Za-z]{3}).*", "\\1", basename(bam_path)))
@@ -136,7 +136,7 @@ best_rep_for_K <- function(lnL, k) {
     if (nrow(sub) > 0) sub$rep else NA
 }
 
-# ─── SAMPLING SITES (real coords + town markers) ─────────────────────────────
+# --- SAMPLING SITES (real coords + town markers) -----------------------------
 sites <- tibble::tribble(
     ~pop,  ~region,    ~lon,         ~lat,
     "AKL", "Rankin",   -91.3071148,   62.8372049,
@@ -163,7 +163,7 @@ towns_sf <- st_as_sf(tibble::tribble(
     "Baker Lake",    -96.077,       64.318
 ), coords = c("lon","lat"), crs = 4326)
 
-# ─── PANEL A: Global map (MU-style: region labels only, no town markers) ─────
+# --- PANEL A: Global map (MU-style: region labels only, no town markers) -----
 cat("Loading shapefiles from ", SHP_DIR, "...\n", sep = "")
 bbox_A   <- st_bbox(c(xmin = -99, xmax = -82, ymin = 61.5, ymax = 68.5), crs = 4326)
 bbox_sfA <- st_as_sfc(bbox_A)
@@ -294,7 +294,7 @@ ggsave(file.path(FIG_DIR, "Fig1_Overview_map.pdf"), p_map_standalone,
 ggsave(file.path(FIG_DIR, "Fig1_Overview_map.png"), p_map_standalone,
        width = 9, height = 7, dpi = 300)
 
-# ─── PANEL B: Global PCA ─────────────────────────────────────────────────────
+# --- PANEL B: Global PCA -----------------------------------------------------
 global_prefix <- file.path(PCA_DIR, paste0("global_", SUFFIX))
 cat("Loading global PCA:", global_prefix, "\n")
 pca_global <- load_pca(global_prefix)
@@ -330,7 +330,7 @@ make_global_pca <- function(pca_obj) {
 }
 p_pca <- make_global_pca(pca_global)
 
-# ─── PANEL C: Global NGSadmix barplot ────────────────────────────────────────
+# --- PANEL C: Global NGSadmix barplot ----------------------------------------
 cat("Selecting best NGSadmix replicate for K =", GLOBAL_K, "\n")
 lnL  <- parse_all_lnL(LOG_DIR, GLOBAL_ADMIX_PREFIX)
 brep <- best_rep_for_K(lnL, GLOBAL_K)
@@ -384,7 +384,7 @@ make_global_admix <- function(qopt_file, bamlist, K) {
 }
 p_admix <- make_global_admix(qopt_file, GLOBAL_BAMLIST, GLOBAL_K)
 
-# ─── ASSEMBLE (2 columns: map left, PCA + admixture stacked right) ───────────
+# --- ASSEMBLE (2 columns: map left, PCA + admixture stacked right) -----------
 right_col <- (p_pca / p_admix) + plot_layout(heights = c(1.5, 1.0))
 final <- (p_map | right_col) + plot_layout(widths = c(1.0, 1.3))
 ggsave(file.path(FIG_DIR, "Fig2_Global_structure.pdf"), final,

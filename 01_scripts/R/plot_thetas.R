@@ -1,6 +1,6 @@
 # =============================================================================
-# plot_thetas.R — Publication-quality diversity summary
-#   Dot plots with 95% CI from sliding windows, axes in ×10⁻³
+# plot_thetas.R -- Publication-quality diversity summary
+#   Dot plots with 95% CI from sliding windows, axes in x10-3
 #   Reads both per-scaffold .pestPG and per-window .thetaswindow.pestPG
 # Usage: Rscript plot_thetas.R <theta_dir> <pop_file> <fig_dir> <table_dir>
 # =============================================================================
@@ -34,7 +34,7 @@ region_map <- c(
 
 region_colors <- c(Rankin = "#31688E", Baker = "#E69F00", Naujaat = "#35B779")
 
-# ─── 1. Read per-scaffold stats (genome-wide means) ─────────────────────────
+# --- 1. Read per-scaffold stats (genome-wide means) -------------------------
 results <- data.frame()
 
 for (pop in pops) {
@@ -71,7 +71,7 @@ if (nrow(results) == 0) {
     quit(save = "no", status = 1)
 }
 
-# ─── 2. Read sliding window stats (for CI) ──────────────────────────────────
+# --- 2. Read sliding window stats (for CI) ----------------------------------
 window_data <- data.frame()
 
 for (pop in pops) {
@@ -101,7 +101,7 @@ for (pop in pops) {
 
 cat("Window data:", nrow(window_data), "windows across", length(unique(window_data$Pop)), "pops\n")
 
-# ─── 3. Compute CI from windows ─────────────────────────────────────────────
+# --- 3. Compute CI from windows ---------------------------------------------
 if (nrow(window_data) > 0) {
     ci_summary <- window_data %>%
         group_by(Pop) %>%
@@ -112,7 +112,7 @@ if (nrow(window_data) > 0) {
             .groups = "drop"
         )
 
-    # Merge SE into results — CI centered on genome-wide estimate
+    # Merge SE into results -- CI centered on genome-wide estimate
     results <- left_join(results, ci_summary, by = "Pop")
     results <- results %>%
         mutate(
@@ -124,7 +124,7 @@ if (nrow(window_data) > 0) {
             td_hi = TajimaD + 1.96 * td_se
         )
 } else {
-    # No window data — CI will be NA
+    # No window data -- CI will be NA
     results$pi_lo <- results$pi_hi <- NA
     results$tw_lo <- results$tw_hi <- NA
     results$td_lo <- results$td_hi <- NA
@@ -133,7 +133,7 @@ if (nrow(window_data) > 0) {
 results$Pop <- factor(results$Pop, levels = pop_order)
 results$Region <- factor(results$Region, levels = c("Rankin", "Baker", "Naujaat"))
 
-# ─── 4. Summary table ───────────────────────────────────────────────────────
+# --- 4. Summary table -------------------------------------------------------
 cat("\n=== Diversity summary ===\n")
 print(results[, c("Pop", "Region", "pi", "theta_W", "TajimaD", "nSites")], row.names = FALSE)
 
@@ -141,7 +141,7 @@ write.csv(results[, c("Pop", "Region", "pi", "theta_W", "TajimaD", "nSites")],
           file.path(table_dir, "Table_Diversity.csv"), row.names = FALSE)
 cat("Table written with", nrow(results), "populations.\n")
 
-# ─── 5. Publication-quality dot plots ────────────────────────────────────────
+# --- 5. Publication-quality dot plots ----------------------------------------
 theme_pub <- theme_bw(base_size = 11) +
     theme(
         panel.grid.minor = element_blank(),
@@ -154,7 +154,7 @@ theme_pub <- theme_bw(base_size = 11) +
         plot.margin = margin(5, 10, 5, 5)
     )
 
-# A) Nucleotide diversity — x10^-3 scale
+# A) Nucleotide diversity -- x10^-3 scale
 p_pi <- ggplot(results, aes(x = Pop, y = pi * 1000, color = Region)) +
     geom_point(size = 3) +
     geom_errorbar(aes(ymin = pi_lo * 1000, ymax = pi_hi * 1000),
@@ -164,7 +164,7 @@ p_pi <- ggplot(results, aes(x = Pop, y = pi * 1000, color = Region)) +
          title = expression(bold("A)") ~ "Nucleotide diversity (" * pi * ")")) +
     theme_pub
 
-# B) Watterson's theta — x10^-3 scale
+# B) Watterson's theta -- x10^-3 scale
 p_tw <- ggplot(results, aes(x = Pop, y = theta_W * 1000, color = Region)) +
     geom_point(size = 3) +
     geom_errorbar(aes(ymin = tw_lo * 1000, ymax = tw_hi * 1000),
@@ -174,7 +174,7 @@ p_tw <- ggplot(results, aes(x = Pop, y = theta_W * 1000, color = Region)) +
          title = expression(bold("B)") ~ "Watterson's" ~ theta[W])) +
     theme_pub
 
-# C) Tajima's D — natural scale, zero-line
+# C) Tajima's D -- natural scale, zero-line
 p_td <- ggplot(results, aes(x = Pop, y = TajimaD, color = Region)) +
     geom_hline(yintercept = 0, linetype = "dashed", color = "grey50", linewidth = 0.4) +
     geom_point(size = 3) +

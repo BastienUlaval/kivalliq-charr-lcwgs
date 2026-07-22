@@ -1,5 +1,5 @@
 # =============================================================================
-# make_sites_list.R — Extract chr/pos/major/minor from ANGSD .mafs file
+# make_sites_list.R -- Extract chr/pos/major/minor from ANGSD .mafs file
 # Usage: Rscript make_sites_list.R <infile.mafs> <outfile_sites>
 # =============================================================================
 

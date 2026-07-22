@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# plot_panel_regional_structure.R  — Figure 3 (CJFAS Kivalliq Arctic charr)
+# plot_panel_regional_structure.R  -- Figure 3 (CJFAS Kivalliq Arctic charr)
 #
 # 3-row x 2-column composite:
 #   Row 1 (maps)        : a) Rankin Inlet zoom   b) Naujaat zoom
@@ -13,7 +13,7 @@
 #               MaxMedK/MaxMeaK and fastSTRUCTURE converge on K=2. The K=5 peak
 #               from the internal Evanno deltaK was an artifact of uneven
 #               sampling across the 5 Rankin populations.)
-#   - Naujaat : K=5 (unchanged — Evanno, Puechmaille, and fastSTRUCTURE all
+#   - Naujaat : K=5 (unchanged -- Evanno, Puechmaille, and fastSTRUCTURE all
 #               converge on K=5)
 #
 # Same palette/shape convention as plot_panel_global_structure.R:
@@ -24,7 +24,7 @@
 #     base_dir    = pipeline root (contains 04_pca/, 05_admixture/, 02_info/,
 #                   99_figures/)
 #     shp_dir     = directory with the basemap shapefiles (Statistics Canada
-#                   boundary files + NRCan CanVec lakes/rivers — not included
+#                   boundary files + NRCan CanVec lakes/rivers -- not included
 #                   in this repo, see README)
 #     r_lib_path  = optional, only needed if packages are not on the default
 #                   R library path
@@ -51,7 +51,7 @@ suppressPackageStartupMessages({
 
 sf_use_s2(FALSE)
 
-# ─── CONFIG (derived from base_dir/shp_dir arguments) ────────────────────────
+# --- CONFIG (derived from base_dir/shp_dir arguments) ------------------------
 PCA_DIR         <- file.path(BASE_DIR, "04_pca")
 ADMIX_RANKIN    <- file.path(BASE_DIR, "05_admixture", "rankin")
 ADMIX_NAUJAAT   <- file.path(BASE_DIR, "05_admixture", "naujaat")
@@ -66,7 +66,7 @@ NAUJAAT_K       <- 5
 
 dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 
-# ─── PALETTE (Okabe-Ito) ─────────────────────────────────────────────────────
+# --- PALETTE (Okabe-Ito) -----------------------------------------------------
 POP_COLORS <- c(
     "HOR" = "#009E73",
     "PAM" = "#0072B2", "NOP" = "#56B4E9", "TIN" = "#4E79A7",
@@ -108,7 +108,7 @@ towns_sf <- st_as_sf(tibble::tribble(
     "Naujaat",       -86.244657,    66.528295
 ), coords = c("lon","lat"), crs = 4326)
 
-# ─── HELPERS ─────────────────────────────────────────────────────────────────
+# --- HELPERS -----------------------------------------------------------------
 extract_pop <- function(bam_path) {
     toupper(sub(".*saal([A-Za-z]{3}).*", "\\1", basename(bam_path)))
 }
@@ -151,7 +151,7 @@ best_rep_for_K <- function(lnL, k) {
     if (nrow(sub) > 0) sub$rep else NA
 }
 
-# ─── LOAD MAP LAYERS (SHP) ───────────────────────────────────────────────────
+# --- LOAD MAP LAYERS (SHP) ---------------------------------------------------
 bbox_all <- st_bbox(c(xmin = -93, xmax = -83, ymin = 62, ymax = 68), crs = 4326)
 bbox_sf  <- st_as_sfc(bbox_all)
 
@@ -164,7 +164,7 @@ rivers <- read_sf(file.path(SHP_DIR, "watercourse_1.shp")) %>%
     st_transform(4326) %>% st_crop(bbox_sf) %>% st_simplify(dTolerance = 0.002)
 nunavut <- canada[canada$PRNAME == "Nunavut", ]
 
-# ─── PANELS A + B: regional zoom maps ────────────────────────────────────────
+# --- PANELS A + B: regional zoom maps ----------------------------------------
 make_zoom_map <- function(sites_sf_sub, town_sub, xlim, ylim, label) {
     pop_levels    <- intersect(POP_ORDER, unique(as.character(sites_sf_sub$pop)))
     region_levels <- unique(as.character(sites_sf_sub$region))
@@ -227,7 +227,7 @@ p_map_naujaat <- make_zoom_map(
     xlim = c(-87.5, -84.0), ylim = c(65.85, 67.15),
     label = "b) Naujaat sampling sites")
 
-# ─── PANELS C + D: regional PCAs (PC1 vs PC2, per-pop 95% ellipses) ──────────
+# --- PANELS C + D: regional PCAs (PC1 vs PC2, per-pop 95% ellipses) ----------
 make_regional_pca <- function(pca_obj, label) {
     pca <- pca_obj$data; eig <- pca_obj$eig
     pres_pops <- levels(pca$pop); pres_regs <- levels(pca$region)
@@ -266,7 +266,7 @@ pca_naujaat <- load_pca(file.path(PCA_DIR, paste0("naujaat_", SUFFIX)),
 p_pca_rankin  <- make_regional_pca(pca_rankin,  "c) Rankin Inlet PCA")
 p_pca_naujaat <- make_regional_pca(pca_naujaat, "d) Naujaat PCA")
 
-# ─── PANELS E + F: regional NGSadmix barplots ────────────────────────────────
+# --- PANELS E + F: regional NGSadmix barplots --------------------------------
 make_regional_admix <- function(qopt_file, bamlist, K, label, subset_pops) {
     Q    <- read.table(qopt_file, header = FALSE)
     bams <- scan(bamlist, what = "character", quiet = TRUE)
@@ -325,7 +325,7 @@ p_admix_naujaat <- make_regional_admix(qopt_naujaat, NAUJAAT_BAMLIST, NAUJAAT_K,
                                        sprintf("f) Naujaat NGSadmix (K=%d)", NAUJAAT_K),
                                        c("ITI","KGJ","NOP","PAM","SUP","TIN","WHI"))
 
-# ─── ASSEMBLE 3 rows x 2 cols ────────────────────────────────────────────────
+# --- ASSEMBLE 3 rows x 2 cols ------------------------------------------------
 cat("Assembling Figure 3...\n")
 final <- (p_map_rankin   | p_map_naujaat) /
          (p_pca_rankin   | p_pca_naujaat) /

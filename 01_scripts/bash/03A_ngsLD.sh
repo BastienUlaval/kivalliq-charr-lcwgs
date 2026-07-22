@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 03A_ngsLD.sh — Estimate LD per chromosome with ngsLD
+# 03A_ngsLD.sh -- Estimate LD per chromosome with ngsLD
 # Submit: cat regions_number.txt | parallel -j10 \
 #   sbatch -c 4 --mem 20G -p small --time 1-00:00 \
 #   01_scripts/bash/03A_ngsLD.sh {}
@@ -30,7 +30,7 @@ sed 's/ /\t/g' "$SITES" > "$SITES_TAB"
 # Count sites for this chromosome
 NSITES=$(zcat "$BEAGLE" | tail -n +2 | wc -l)
 
-log_msg "=== ngsLD — chr${REGION_NUM}: ${NSITES} SNPs ==="
+log_msg "=== ngsLD -- chr${REGION_NUM}: ${NSITES} SNPs ==="
 
 "$NGSLD_PATH" \
     --geno "$BEAGLE" \

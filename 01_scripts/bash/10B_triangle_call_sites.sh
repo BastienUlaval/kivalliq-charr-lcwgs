@@ -9,7 +9,7 @@
 #SBATCH --array=0-99
 
 # =============================================================================
-# 10B_triangle_call_sites.sh (array) — Call SNPs per chromosome to avoid OOM
+# 10B_triangle_call_sites.sh (array) -- Call SNPs per chromosome to avoid OOM
 #
 # Each array task processes ONE chromosome (read from autosomes.chrs).
 # Outputs go to 26_triangle/sites/per_chr/triangle_sites_<chr>.{mafs.gz, arg}
@@ -36,7 +36,7 @@ BAMLIST="02_info/bamlists/triangle.bamlist"
 N_IND=$(wc -l < "$BAMLIST")
 MIN_IND=$(awk -v n="$N_IND" -v p="$PERCENT_IND" 'BEGIN{printf "%d", n*p+0.999}')
 
-# ─── Build autosome list (NC_ only, excluding sex chromosomes) ───────────────
+# --- Build autosome list (NC_ only, excluding sex chromosomes) ---------------
 AUTO_RF="$SITES_DIR/autosomes.chrs"
 FAI="${GENOME}.fai"
 [[ -s "$FAI" ]] || { echo "Missing $FAI" >&2; exit 1; }
@@ -53,9 +53,9 @@ fi
 N_AUTO=$(wc -l < "$AUTO_RF")
 echo "Autosomes available: $N_AUTO"
 
-# ─── Skip if task index exceeds chromosome count ─────────────────────────────
+# --- Skip if task index exceeds chromosome count -----------------------------
 if [[ "$SLURM_ARRAY_TASK_ID" -ge "$N_AUTO" ]]; then
-    echo "Task $SLURM_ARRAY_TASK_ID >= $N_AUTO autosomes — exiting cleanly."
+    echo "Task $SLURM_ARRAY_TASK_ID >= $N_AUTO autosomes -- exiting cleanly."
     exit 0
 fi
 
@@ -65,11 +65,11 @@ CHR=$(awk -v i=$((SLURM_ARRAY_TASK_ID + 1)) 'NR == i' "$AUTO_RF")
 
 OUT_PREFIX="$OUTDIR/triangle_sites_${CHR}"
 
-# ─── Skip if already done (re-run safe) ──────────────────────────────────────
+# --- Skip if already done (re-run safe) --------------------------------------
 if [[ -s "${OUT_PREFIX}.mafs.gz" ]]; then
     N_LINES=$(zcat "${OUT_PREFIX}.mafs.gz" | wc -l)
     if [[ "$N_LINES" -gt 1 ]]; then
-        echo "Skipping $CHR — already done (${N_LINES} lines)"
+        echo "Skipping $CHR -- already done (${N_LINES} lines)"
         exit 0
     fi
 fi

@@ -1,5 +1,5 @@
 # =============================================================================
-# sum_sfs.R — Sum multi-line SFS (from realSFS -nSites) into single line
+# sum_sfs.R -- Sum multi-line SFS (from realSFS -nSites) into single line
 # Usage: Rscript sum_sfs.R <sfs_file>
 # =============================================================================
 

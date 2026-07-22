@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# plot_management_units.R  — Figure 7 (CJFAS Kivalliq Arctic charr)
+# plot_management_units.R  -- Figure 7 (CJFAS Kivalliq Arctic charr)
 #
 # Six-panel synthesis figure - renamed from plot_conservation_units.R to use
 # "Management Units" (MU) at the Kivalliq regional scale, while explicitly
@@ -26,7 +26,7 @@
 #     base_dir    = pipeline root (contains 99_tables/, figures/dstats/,
 #                   14_ibd/, 99_figures/)
 #     shp_dir     = directory with the basemap shapefiles (Statistics Canada
-#                   boundary files + NRCan CanVec lakes — not included in
+#                   boundary files + NRCan CanVec lakes -- not included in
 #                   this repo, see README)
 #     r_lib_path  = optional, only needed if packages are not on the default
 #                   R library path

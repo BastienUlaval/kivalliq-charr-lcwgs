@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 06_fst.sh — Pairwise FST for all 78 population pairs
+# 06_fst.sh -- Pairwise FST for all 78 population pairs
 # Includes global + sliding window FST
 # Submit: sbatch 01_scripts/bash/06_fst.sh
 # =============================================================================
@@ -27,11 +27,11 @@ NUM_POPS=${#POPS_ARRAY[@]}
 
 log_msg "=== PAIRWISE FST (${NUM_POPS} populations, $((NUM_POPS * (NUM_POPS - 1) / 2)) pairs) ==="
 
-# ─── Subsample to equal N for fairness ───────────────────────────────────────
+# --- Subsample to equal N for fairness ---------------------------------------
 log_msg "Subsampling populations to equal size..."
 "$RSCRIPT" 01_scripts/R/subsample_equal_n.R "${INFO_DIR}/bamlists" "${FST_DIR}" "${INFO_DIR}/pop.txt"
 
-# ─── Compute SAF per population (using subsampled BAMs) ─────────────────────
+# --- Compute SAF per population (using subsampled BAMs) ---------------------
 log_msg "Computing SAF per population..."
 
 SITES="${INFO_DIR}/sites_all_${SUFFIX}_canonical_nosex"
@@ -58,7 +58,7 @@ for POP in "${POPS_ARRAY[@]}"; do
       -out "${FST_DIR}/${POP}_${SUFFIX}"
 done
 
-# ─── Pairwise FST ───────────────────────────────────────────────────────────
+# --- Pairwise FST -----------------------------------------------------------
 log_msg "Computing pairwise FST..."
 
 RESULTS="${FST_DIR}/fst_results.tsv"
@@ -108,7 +108,7 @@ for ((i = 0; i < NUM_POPS; i++)); do
     done
 done
 
-# ─── Publication figures ─────────────────────────────────────────────────────
+# --- Publication figures -----------------------------------------------------
 log_msg "Generating FST heatmaps and IBD plots..."
 
 "$RSCRIPT" 01_scripts/R/plot_fst.R \

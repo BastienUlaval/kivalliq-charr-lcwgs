@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 05_admixture.sh — NGSadmix (global, Rankin, Naujaat) with replicate runs
+# 05_admixture.sh -- NGSadmix (global, Rankin, Naujaat) with replicate runs
 # Submits 3 independent jobs (one per dataset) to respect 7-day time limits.
 #
 # Optimal K (global=7, Rankin=2, Naujaat=5) was selected via the
@@ -27,7 +27,7 @@ mkdir -p "${ADMIX_DIR}/global" "${ADMIX_DIR}/rankin" "${ADMIX_DIR}/naujaat"
 
 log_msg "=== SUBMITTING 3 ADMIXTURE JOBS ==="
 
-# ─── Global (K=2-15, 10 reps) ───────────────────────────────────────────────
+# --- Global (K=2-15, 10 reps) -----------------------------------------------
 JID_GLOBAL=$(sbatch --parsable \
     -J "admix_global" \
     -o logs/admix_global_%j.out \
@@ -53,7 +53,7 @@ echo 'Global DONE'
 
 log_msg "  Global: job ${JID_GLOBAL} (K=${K_MIN}-${K_MAX_GLOBAL}, ${NGSADMIX_NREP} reps)"
 
-# ─── Rankin (K=2-7, 10 reps) ────────────────────────────────────────────────
+# --- Rankin (K=2-7, 10 reps) ------------------------------------------------
 JID_RANKIN=$(sbatch --parsable \
     -J "admix_rankin" \
     -o logs/admix_rankin_%j.out \
@@ -79,7 +79,7 @@ echo 'Rankin DONE'
 
 log_msg "  Rankin: job ${JID_RANKIN} (K=${K_MIN}-${K_MAX_RANKIN}, ${NGSADMIX_NREP} reps)"
 
-# ─── Naujaat (K=2-9, 10 reps) ───────────────────────────────────────────────
+# --- Naujaat (K=2-9, 10 reps) -----------------------------------------------
 JID_NAUJAAT=$(sbatch --parsable \
     -J "admix_naujaat" \
     -o logs/admix_naujaat_%j.out \

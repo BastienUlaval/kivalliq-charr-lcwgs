@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
-# ──────────────────────────────────────────────────────────────────────────────
-# plot_dstats.R (v4) — D-statistics plots, with and without significance stars
+# ------------------------------------------------------------------------------
+# plot_dstats.R (v4) -- D-statistics plots, with and without significance stars
 #
 # Usage:
 #   Rscript plot_dstats.R <dstat_dir> <fig_dir> [<h1_label>]
@@ -10,20 +10,20 @@
 #   {POP}_vs_{H1}_H3-{H3}_H4-{H4}_Dstat.TransRem.txt
 #
 # Outputs in <fig_dir> (TWO versions of each main figure):
-#   Fig_Dstats_<H1>_forest.pdf/png            — without stars
-#   Fig_Dstats_<H1>_forest_stars.pdf/png      — with stars
-#   Fig_Dstats_<H1>_barplot.pdf/png           — without stars
-#   Fig_Dstats_<H1>_barplot_stars.pdf/png     — with stars
-#   Fig_Dstats_<H1>_combined.pdf              — forest + bar (no stars)
-#   Fig_Dstats_<H1>_combined_stars.pdf        — forest + bar (with stars)
-#   Fig_Dstats_<H1>_obs_vs_notrans.pdf/png    — Observed vs No Trans
+#   Fig_Dstats_<H1>_forest.pdf/png            -- without stars
+#   Fig_Dstats_<H1>_forest_stars.pdf/png      -- with stars
+#   Fig_Dstats_<H1>_barplot.pdf/png           -- without stars
+#   Fig_Dstats_<H1>_barplot_stars.pdf/png     -- with stars
+#   Fig_Dstats_<H1>_combined.pdf              -- forest + bar (no stars)
+#   Fig_Dstats_<H1>_combined_stars.pdf        -- forest + bar (with stars)
+#   Fig_Dstats_<H1>_obs_vs_notrans.pdf/png    -- Observed vs No Trans
 #   Table_Dstats_<H1>.tsv
 #
 # Significance based on Z-score:
 #   *** p < 0.001  ** p < 0.01  * p < 0.05
 #
-# Author: Bastien Rubin + Claude (2026)
-# ──────────────────────────────────────────────────────────────────────────────
+# Author: Bastien Rubin (2026)
+# ------------------------------------------------------------------------------
 
 suppressPackageStartupMessages({
     library(ggplot2)
@@ -35,9 +35,9 @@ suppressPackageStartupMessages({
     library(scales)
 })
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 1. Configuration
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 2) {
     stop("Usage: Rscript plot_dstats.R <dstat_dir> <fig_dir> [<h1_label>]")
@@ -55,9 +55,9 @@ cat("  DSTAT_DIR:", DSTAT_DIR, "\n")
 cat("  FIG_DIR:  ", FIG_DIR, "\n")
 cat("  H1 label: ", H1_LABEL, "\n\n")
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 2. Population metadata
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 POP_REGIONS <- c(
     AKL = "Rankin", AUL = "Rankin", CRB = "Rankin",
     DIA = "Rankin", MEL = "Rankin",
@@ -82,9 +82,9 @@ REGION_FILL <- c(
 # Ordre : Baker sera en haut, Rankin en bas
 REGION_ORDER <- c("Baker", "Naujaat", "Rankin")
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 3. Helpers
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 parse_dstat_file <- function(f, mode_label) {
     df <- tryCatch(
         read.table(f, header = TRUE, sep = "\t", check.names = FALSE,
@@ -120,9 +120,9 @@ sig_from_pz <- function(p, z) {
     out
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 4. Load all D-stat files
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 obs_pattern <- paste0("^.+_vs_", H1_LABEL, "_H3-.+_H4-.+_Dstat\\.Observed\\.txt$")
 obs_files <- list.files(DSTAT_DIR, pattern = obs_pattern, full.names = TRUE)
 
@@ -170,44 +170,44 @@ results$Sig         <- sig_from_pz(results$pvalue, results$Z)
 
 cat("Parsed", length(unique(results$H2)), "populations\n\n")
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 5. Save table
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 table_path <- file.path(FIG_DIR, paste0("Table_Dstats_", H1_LABEL, ".tsv"))
 results %>%
     select(H1, H2, H3, H4, Region, Mode, D, SD, CI_low, CI_high, Z, pvalue, Sig,
            nABBA, nBABA, nBlocks) %>%
     arrange(Region, desc(D), Mode) %>%
     write_tsv(table_path)
-cat("✓ Table written:", table_path, "\n")
+cat("[ok] Table written:", table_path, "\n")
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 6. Plotting data
-# ──────────────────────────────────────────────────────────────────────────────
-# 1. On garde l'ordre des régions (Baker en haut, Rankin en bas)
+# ------------------------------------------------------------------------------
+# 1. Fixed region order (Baker at the top, Rankin at the bottom)
 REGION_ORDER <- c("Baker", "Naujaat", "Rankin")
 
-# 2. Préparation des données
+# 2. Prepare the plotting data
 plot_data <- results %>%
     filter(Mode == "Observed") %>%
-    # CHANGEMENT ICI : On trie par D croissant (pas de 'desc')
-    # Les plus petits D de chaque région arrivent en premier dans le dataframe
+    # Sort by increasing D within region, so the smallest D of each region
+    # comes first in the dataframe.
     arrange(factor(Region, levels = REGION_ORDER), D)
 
-# 3. On capture cet ordre (plus petit D -> plus grand D)
+# 3. Capture that order (smallest D -> largest D)
 pop_order <- unique(plot_data$H2)
 
-# 4. On transforme en facteurs pour ggplot
+# 4. Convert to factors for ggplot
 plot_data <- plot_data %>%
     mutate(
         Region = factor(Region, levels = REGION_ORDER),
-        # On utilise rev() car ggplot dessine le niveau 1 en bas de l'axe Y.
-        # En inversant, le premier élément (plus petit D) se retrouve au sommet.
+        # rev() is needed because ggplot draws factor level 1 at the bottom of
+        # the y axis; reversing puts the smallest D at the top.
         H2 = factor(H2, levels = rev(pop_order))
-    ) # <--- Parenthèse fermée, le script ne plantera plus ici !
-# ──────────────────────────────────────────────────────────────────────────────
+    )
+# ------------------------------------------------------------------------------
 # 7. Theme
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 theme_paper <- theme_minimal(base_size = 13, base_family = "sans") +
     theme(
         panel.grid.major.y = element_line(color = "gray92", linewidth = 0.4),
@@ -231,9 +231,9 @@ theme_paper <- theme_minimal(base_size = 13, base_family = "sans") +
         plot.margin        = margin(15, 20, 15, 15)
     )
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 8. Forest plot — function with stars on/off toggle
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# 8. Forest plot -- function with stars on/off toggle
+# ------------------------------------------------------------------------------
 make_forest <- function(data, with_stars = FALSE) {
     if (with_stars) {
         data$annot <- sprintf("Z=%.1f %s", data$Z, data$Sig)
@@ -261,7 +261,7 @@ make_forest <- function(data, with_stars = FALSE) {
         ) +
         labs(
             title    = bquote(bolditalic(D)~bold("-statistics with")~bolditalic(.(H1_LABEL))~bold("as H1")),
-            subtitle = bquote(italic("D")~"("*.(H1_LABEL)*", H2 ; LLS, DV)  —  "*
+            subtitle = bquote(italic("D")~"("*.(H1_LABEL)*", H2 ; LLS, DV)  --  "*
                               italic("D")~">"~"0 indicates Atlantic introgression in H2"),
             x        = expression(italic("D") * "-statistic (Observed)"),
             y        = NULL,
@@ -275,9 +275,9 @@ make_forest <- function(data, with_stars = FALSE) {
         )
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 9. Barplot horizontal — function with stars on/off toggle
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# 9. Barplot horizontal -- function with stars on/off toggle
+# ------------------------------------------------------------------------------
 make_barplot <- function(data, with_stars = FALSE) {
     if (with_stars) {
         data$label_bar <- sprintf("%.3f%s", data$D,
@@ -319,9 +319,9 @@ make_barplot <- function(data, with_stars = FALSE) {
         )
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 10. Build both versions
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 forest_no    <- make_forest(plot_data,  with_stars = FALSE)
 forest_stars <- make_forest(plot_data,  with_stars = TRUE)
 bar_no       <- make_barplot(plot_data, with_stars = FALSE)
@@ -330,9 +330,9 @@ bar_stars    <- make_barplot(plot_data, with_stars = TRUE)
 combined_no    <- forest_no    + bar_no    + plot_layout(guides = "collect", widths = c(1, 1)) & theme(legend.position = "top")
 combined_stars <- forest_stars + bar_stars + plot_layout(guides = "collect", widths = c(1, 1)) & theme(legend.position = "top")
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 11. Comparison Observed vs No Trans (only one version, no stars needed)
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 comparison_plot <- NULL
 if (any(results$Mode == "No Trans")) {
     both_modes <- results %>%
@@ -345,7 +345,7 @@ if (any(results$Mode == "No Trans")) {
         filter(!is.na(H2))
 
     if (length(unique(both_modes$Mode)) == 2) {
-        cat("✓ Both Observed and No Trans available — making comparison plot\n")
+        cat("[ok] Both Observed and No Trans available -- making comparison plot\n")
         comparison_plot <- ggplot(both_modes,
                                   aes(x = D, y = H2, color = Region, shape = Mode)) +
             geom_vline(xintercept = 0, linetype = "dashed",
@@ -373,9 +373,9 @@ if (any(results$Mode == "No Trans")) {
     }
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 12. Save plots — both versions
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# 12. Save plots -- both versions
+# ------------------------------------------------------------------------------
 n_pops <- length(unique(plot_data$H2))
 plot_h <- max(4.5, 0.45 * n_pops + 2.5)
 
@@ -385,9 +385,9 @@ save_plot <- function(p, basename, width, height) {
     pdf_out <- file.path(FIG_DIR, paste0(basename, ".pdf"))
     png_out <- file.path(FIG_DIR, paste0(basename, ".png"))
     ggsave(pdf_out, p, width = width, height = height, device = cairo_pdf)
-    cat("  ✓", pdf_out, "\n")
+    cat("  [ok]", pdf_out, "\n")
     ggsave(png_out, p, width = width, height = height, dpi = 300)
-    cat("  ✓", png_out, "\n")
+    cat("  [ok]", png_out, "\n")
 }
 
 # Forest
@@ -398,13 +398,13 @@ save_plot(forest_stars, paste0("Fig_Dstats_", H1_LABEL, "_forest_stars"), 10, pl
 save_plot(bar_no,    paste0("Fig_Dstats_", H1_LABEL, "_barplot"),       9,  plot_h)
 save_plot(bar_stars, paste0("Fig_Dstats_", H1_LABEL, "_barplot_stars"), 10, plot_h)
 
-# Combined (PDF only — these are large)
+# Combined (PDF only -- these are large)
 comb_pdf_no    <- file.path(FIG_DIR, paste0("Fig_Dstats_", H1_LABEL, "_combined.pdf"))
 comb_pdf_stars <- file.path(FIG_DIR, paste0("Fig_Dstats_", H1_LABEL, "_combined_stars.pdf"))
 ggsave(comb_pdf_no,    combined_no,    width = 16, height = plot_h, device = cairo_pdf)
 ggsave(comb_pdf_stars, combined_stars, width = 17, height = plot_h, device = cairo_pdf)
-cat("  ✓", comb_pdf_no,    "\n")
-cat("  ✓", comb_pdf_stars, "\n")
+cat("  [ok]", comb_pdf_no,    "\n")
+cat("  [ok]", comb_pdf_stars, "\n")
 
 # Comparison Observed vs No Trans
 if (!is.null(comparison_plot)) {
@@ -413,9 +413,9 @@ if (!is.null(comparison_plot)) {
               10, plot_h)
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 # 13. Summary
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 cat("\n=== Summary (Observed mode) ===\n")
 summary_tbl <- plot_data %>%
     select(Region, H2, D, SD, Z, Sig) %>%
@@ -423,4 +423,4 @@ summary_tbl <- plot_data %>%
            Z = round(Z, 1)) %>%
     arrange(Region, desc(D))
 print(summary_tbl)
-cat("\n✓ Done.\n")
+cat("\n[ok] Done.\n")

@@ -1,9 +1,9 @@
 #!/bin/bash
 # =============================================================================
-# 11B_dstats_figures.sh — D-stats publication figure + table (Fig. 5, Table 3)
+# 11B_dstats_figures.sh -- D-stats publication figure + table (Fig. 5, Table 3)
 # Run AFTER all 11_dstats.sh array tasks complete.
 #
-#   plot_dstats.R — forest/bar plots (observed vs transversion-only) +
+#   plot_dstats.R -- forest/bar plots (observed vs transversion-only) +
 #   Table_Dstats_JAY.tsv
 #
 # Submit: sbatch 01_scripts/bash/11B_dstats_figures.sh

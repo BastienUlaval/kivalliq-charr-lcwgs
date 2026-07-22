@@ -1,5 +1,5 @@
 # =============================================================================
-# plot_fst.R — FST heatmap (red gradient) + regional side-by-side + tables
+# plot_fst.R -- FST heatmap (red gradient) + regional side-by-side + tables
 # Usage: Rscript plot_fst.R <fst_results.tsv> <pop.txt> <fig_dir> <table_dir>
 # =============================================================================
 argv <- commandArgs(TRUE)
@@ -18,12 +18,12 @@ suppressPackageStartupMessages({
 dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(table_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ─── Read data ───────────────────────────────────────────────────────────────
+# --- Read data ---------------------------------------------------------------
 fst <- read.delim(fst_file, header = TRUE)
 pops <- scan(pop_file, what = "character", quiet = TRUE)
 n <- length(pops)
 
-# ─── Build FST matrix ───────────────────────────────────────────────────────
+# --- Build FST matrix -------------------------------------------------------
 mat <- matrix(0, n, n, dimnames = list(pops, pops))
 for (i in seq_len(nrow(fst))) {
     p1 <- fst$Pop1[i]; p2 <- fst$Pop2[i]; val <- fst$Fst_weighted[i]
@@ -37,11 +37,11 @@ pop_order <- c("AKL","AUL","CRB","DIA","MEL","HOR","ITI","KGJ","NOP","PAM","SUP"
 pop_order <- intersect(pop_order, pops)
 mat <- mat[pop_order, pop_order]
 
-# ─── Region definitions ─────────────────────────────────────────────────────
+# --- Region definitions -----------------------------------------------------
 rankin_pops  <- intersect(c("AKL","AUL","CRB","DIA","MEL"), pop_order)
 naujaat_pops <- intersect(c("ITI","KGJ","NOP","PAM","SUP","TIN","WHI"), pop_order)
 
-# ─── Helper: build heatmap from a FST matrix ────────────────────────────────
+# --- Helper: build heatmap from a FST matrix --------------------------------
 make_heatmap <- function(fst_mat, pop_ord, title_text, fst_limits) {
     melted <- melt(fst_mat)
     colnames(melted) <- c("Pop1", "Pop2", "FST")
@@ -67,7 +67,7 @@ make_heatmap <- function(fst_mat, pop_ord, title_text, fst_limits) {
         coord_fixed()
 }
 
-# ─── 1. GLOBAL HEATMAP (all 13 pops) ────────────────────────────────────────
+# --- 1. GLOBAL HEATMAP (all 13 pops) ----------------------------------------
 global_max <- max(mat[mat > 0])
 
 p_global <- make_heatmap(mat, pop_order, "Global", c(0, global_max))
@@ -76,7 +76,7 @@ ggsave(file.path(fig_dir, "Fig_FST_heatmap.png"), p_global,
        width = 8, height = 7, dpi = 300)
 cat("Global FST heatmap saved.\n")
 
-# ─── 2. REGIONAL SIDE-BY-SIDE (Rankin | Naujaat, same scale) ────────────────
+# --- 2. REGIONAL SIDE-BY-SIDE (Rankin | Naujaat, same scale) ----------------
 mat_rankin  <- mat[rankin_pops, rankin_pops]
 mat_naujaat <- mat[naujaat_pops, naujaat_pops]
 
@@ -96,7 +96,7 @@ ggsave(file.path(fig_dir, "Fig_FST_heatmap_regional.png"), p_regional,
        width = 14, height = 6, dpi = 300)
 cat("Regional FST heatmap saved.\n")
 
-# ─── 3. TABLES ──────────────────────────────────────────────────────────────
+# --- 3. TABLES --------------------------------------------------------------
 write.csv(mat, file.path(table_dir, "Table_FST_matrix.csv"))
 
 fst$Fst_linearized <- fst$Fst_weighted / (1 - fst$Fst_weighted)

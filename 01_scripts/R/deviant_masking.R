@@ -1,5 +1,5 @@
 # =============================================================================
-# deviant_masking.R — Create BED masks around paralogous SNPs
+# deviant_masking.R -- Create BED masks around paralogous SNPs
 # Usage: Rscript deviant_masking.R <mask_length> <ngsparalog_dir> <info_dir>
 # =============================================================================
 
@@ -19,7 +19,7 @@ suppressPackageStartupMessages({
     library(GenomicRanges)
 })
 
-cat("Mask length:", MASK_LENGTH, "bp (±", DIST, "bp)\n")
+cat("Mask length:", MASK_LENGTH, "bp (+/-", DIST, "bp)\n")
 
 fai <- read.table(file.path(INFO_DIR, "genome.fasta.fai"))
 colnames(fai) <- c("chr", "length", "offset", "linebases", "linewidth")

@@ -8,7 +8,7 @@
 #SBATCH --error=99_logs/10F_%j.err
 
 # =============================================================================
-# 10F_triangle_plot.sh — Run triangle_plot_v2.R: hybrid index + interspecific
+# 10F_triangle_plot.sh -- Run triangle_plot_v2.R: hybrid index + interspecific
 # heterozygosity (Fig_Triangle_combined)
 # =============================================================================
 
@@ -24,7 +24,7 @@ mkdir -p "$FIG_DIR"
 [[ -s "$OUTDIR/diagnostic_snps.tsv"   ]] || { echo "Missing diagnostic_snps.tsv. Run 10E_triangle_diagnostic_beagle.sh." >&2; exit 1; }
 [[ -s "02_info/bamlists/triangle.popmap" ]] || { echo "Missing popmap. Run 10A_triangle_bamlist.sh." >&2; exit 1; }
 
-# Restrict diagnostic SNPs to the ngsParalog-canonical (non-deviant) set —
+# Restrict diagnostic SNPs to the ngsParalog-canonical (non-deviant) set --
 # see triangle_plot_v2.R header. Falls back to no masking (with a warning)
 # if this file doesn't exist yet.
 export CANON_SITES="${INFO_DIR}/sites_all_${SUFFIX}_canonical"

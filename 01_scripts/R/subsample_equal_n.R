@@ -1,5 +1,5 @@
 # =============================================================================
-# subsample_equal_n.R — Downsample populations to smallest N for FST
+# subsample_equal_n.R -- Downsample populations to smallest N for FST
 # Usage: Rscript subsample_equal_n.R <bamlist_dir> <output_dir> <pop_file>
 # =============================================================================
 

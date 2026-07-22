@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 07_thetas.sh — Population diversity statistics (Watterson's theta, pi, Tajima's D)
+# 07_thetas.sh -- Population diversity statistics (Watterson's theta, pi, Tajima's D)
 # FIX: Uses $REALSFS_PATH saf2theta instead of angsd -doThetas (no BAM re-reading)
 # Features: skips existing SAF/SFS/thetas, -rf consistency
 # Submit: sbatch 01_scripts/bash/07_thetas.sh
@@ -44,7 +44,7 @@ for POP in "${POPS_ARRAY[@]}"; do
     SAF_GZ="${PREFIX}.saf.gz"
     SAF_IDX="${PREFIX}.saf.idx"
 
-    # ─── SAF (skip if already complete) ──────────────────────────────────
+    # --- SAF (skip if already complete) ----------------------------------
     if [[ -s "$SAF_GZ" ]] && [[ -s "$SAF_IDX" ]]; then
         log_msg "  SAF already complete for ${POP} ($(du -h "$SAF_GZ" | cut -f1)), skipping SAF..."
     else
@@ -70,7 +70,7 @@ for POP in "${POPS_ARRAY[@]}"; do
         fi
     fi
 
-    # ─── 1D-SFS (skip if already done) ───────────────────────────────────
+    # --- 1D-SFS (skip if already done) -----------------------------------
     SFS_RAW="${PREFIX}.${NSITES}"
     SFS_DSFS="${SFS_RAW}.dsfs"
 
@@ -91,7 +91,7 @@ for POP in "${POPS_ARRAY[@]}"; do
         fi
     fi
 
-    # ─── Thetas via $REALSFS_PATH saf2theta (skip if already done) ─────────────
+    # --- Thetas via $REALSFS_PATH saf2theta (skip if already done) -------------
     THETA_IDX="${PREFIX}.thetas.idx"
 
     if [[ -s "$THETA_IDX" ]]; then
@@ -112,7 +112,7 @@ for POP in "${POPS_ARRAY[@]}"; do
         fi
     fi
 
-    # ─── Per-scaffold + sliding window statistics ────────────────────────
+    # --- Per-scaffold + sliding window statistics ------------------------
     PESTPG="${PREFIX}.thetas.idx.pestPG"
 
     if [[ -s "$PESTPG" ]]; then
@@ -130,7 +130,7 @@ for POP in "${POPS_ARRAY[@]}"; do
     log_msg "  ${POP} complete."
 done
 
-# ─── Summary table + figures ─────────────────────────────────────────────────
+# --- Summary table + figures -------------------------------------------------
 log_msg "Generating diversity summary table and figures..."
 
 "$RSCRIPT" 01_scripts/R/plot_thetas.R \
