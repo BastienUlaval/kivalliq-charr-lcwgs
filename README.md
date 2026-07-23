@@ -99,3 +99,18 @@ config/00_config.sh       — paths, filtering parameters, populations
 01_scripts/R/               — R analysis and plotting scripts
 01_scripts/utils/           — Python helpers (Beagle file manipulation)
 ```
+
+
+## AI use declaration
+
+Generative AI was used in preparing this repository and is declared here for
+transparency. Claude (Anthropic; Opus 4 and Sonnet 5 model families, accessed
+2025–2026) assisted in writing the R and shell scripts that produce the figures
+and summary tables, and in editing code comments and this README.
+
+The study was designed, and all analyses were specified, executed, and
+interpreted, by the authors. All scripts were reviewed, run, and verified by the
+authors against the primary analytical outputs. The authors take full
+responsibility for the correctness of the code in this repository.
+
+The same declaration appears in the associated manuscript.
