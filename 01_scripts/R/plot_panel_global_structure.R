@@ -1,47 +1,44 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# plot_panel_global_structure.R  -- Figure 2 (CJFAS Kivalliq Arctic charr)
+# plot_panel_global_structure.R  — Figures 1 and 2 (CJFAS Kivalliq Arctic charr)
 #
-# 2-panel composite:
-#   a) Global PCA (13 pops, PC1 vs PC2, 95% ellipses per region)
-#   b) Global NGSadmix barplot (best-K replicate)
+# Produces two outputs:
+#   Fig1_Overview_map        : standalone sampling map (13 pops + Hudson Bay inset)
+#   Fig2_Global_structure    : 2-panel composite
+#                                a) Global PCA (13 pops, PC1 vs PC2, 95% ellipses)
+#                                b) Global NGSadmix barplot (best-K replicate)
 #
-# K=7 chosen as the best-supported consensus across Puechmaille (2016)
-# estimators (MedMedK, MedMeaK, MaxMedK, MaxMeaK), computed via the
-# StructureSelector web tool (Li & Liu 2018) from the NGSadmix per-replicate
-# ancestry matrices and log-likelihoods -- not by a script in this repo.
-# Evanno deltaK alone was judged unreliable here (bias under unbalanced
-# sampling; see manuscript Methods).
+# 2026-07-28 — The sampling map was REMOVED from Figure 2. It duplicated
+#   Figure 1, which shows the same 13 sites at larger size and with a full
+#   legend. Figure 2 is now a pure genetic-structure figure. The map-building
+#   code is retained below because Figure 1 still depends on it.
 #
-# Palette = Okabe-Ito (plot_pca.R convention) for populations.
-# Admixture cluster colours = viridis.
+# K value updated 2026-07-15 following StructureSelector validation
+# (Puechmaille 2016 + fastSTRUCTURE Choose-K method):
+#   - Global : K=4 -> K=7  (Puechmaille MedMedK/MedMeaK/MaxMedK/MaxMeaK: three
+#              of the four estimators plateau at 7; fastSTRUCTURE Choose-K
+#              converges on 7-8. K=7 retained as the best-supported consensus
+#              value across estimators.)
+#   NOTE: an earlier version of this header stated K=6; that was a stale
+#   comment and never matched GLOBAL_K below or the published figure.
+#
+# Palette = Okabe-Ito (plot_pca_v2.R convention) for populations.
+# Admixture cluster colours = viridis (matches plot_admixture.R).
 # Shapes: Rankin = circle (16), Naujaat = square (15), Baker = triangle (17).
 #
 # NOTE: basemap fills harmonised with plot_panel_regional_structure.R
 #   (continent = grey92, lakes = white, sea/background = white) so that the
 #   population points stand out as on the Regional figure.
 #
-# Usage:
-#   Rscript plot_panel_global_structure.R <base_dir> <shp_dir> [<r_lib_path>]
-#     base_dir    = pipeline root (contains 04_pca/, 05_admixture/, 02_info/,
-#                   99_figures/)
-#     shp_dir     = directory with the 3 basemap shapefiles (Statistics Canada
-#                   boundary files lpr_000b21a_e.shp + NRCan CanVec
-#                   waterbody_2.shp / watercourse_1.shp -- not included in this
-#                   repo, see README)
-#     r_lib_path  = optional, only needed if packages are not on the default
-#                   R library path (passed to .libPaths())
+# RUN ON THOTH:
+#   /home/barub/miniconda/envs/ibe_env/bin/Rscript plot_panel_global_structure.R
+#
+# All paths hardcoded from config/00_config.sh. Override the few variables in
+# the CONFIG block below if your layout changes.
 # =============================================================================
 
-args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) {
-    stop("Usage: Rscript plot_panel_global_structure.R <base_dir> <shp_dir> [<r_lib_path>]")
-}
-BASE_DIR <- args[1]
-SHP_DIR  <- args[2]
-if (length(args) >= 3) .libPaths(args[3])
-
 suppressPackageStartupMessages({
+    .libPaths("/project/lbernatchez/users/barub/Rlibs")
     library(ggplot2)
     library(dplyr)
     library(tidyr)
@@ -53,12 +50,14 @@ suppressPackageStartupMessages({
 })
 sf_use_s2(FALSE)
 
-# --- CONFIG (derived from base_dir/shp_dir arguments) ------------------------
+# ─── CONFIG (hardcoded from 00_config.sh) ────────────────────────────────────
+BASE_DIR  <- "/project/lbernatchez/users/barub/chap1/lcWGS/angsd_pipeline2"
 PCA_DIR   <- file.path(BASE_DIR, "04_pca")
 ADMIX_DIR <- file.path(BASE_DIR, "05_admixture", "global")
 LOG_DIR   <- ADMIX_DIR                       # NGSadmix .log files live alongside .qopt
 INFO_DIR  <- file.path(BASE_DIR, "02_info")
 FIG_DIR   <- file.path(BASE_DIR, "99_figures")
+SHP_DIR   <- "/project/lbernatchez/users/barub/carte/shp"
 SUFFIX    <- "maf0.05_pctind0.50_maxdepth8_prunednosex"
 
 # Bamlist (individual order, matching .cov.pca and .qopt row order)
@@ -70,7 +69,7 @@ GLOBAL_K            <- 7
 
 dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 
-# --- PALETTE (Okabe-Ito, from plot_pca_v2.R) ---------------------------------
+# ─── PALETTE (Okabe-Ito, from plot_pca_v2.R) ─────────────────────────────────
 POP_COLORS <- c(
     "HOR" = "#009E73",
     "PAM" = "#0072B2", "NOP" = "#56B4E9", "TIN" = "#4E79A7",
@@ -89,9 +88,9 @@ POP_REGION <- c(
 POP_ORDER <- c("AKL","AUL","CRB","DIA","MEL","HOR",
                "ITI","KGJ","NOP","PAM","SUP","TIN","WHI")
 
-# --- HELPERS (match plot_pca.R conventions) ---------------------------------
+# ─── HELPERS (match plot_pca.R / plot_admixture.R conventions) ───────────────
 extract_pop <- function(bam_path) {
-    # Extracts the 3-letter population code from a BAM filename: ".*saal(XXX).*" -> XXX
+    # Same logic as plot_admixture.R: ".*saal(XXX).*" -> XXX (3-letter code)
     toupper(sub(".*saal([A-Za-z]{3}).*", "\\1", basename(bam_path)))
 }
 
@@ -136,7 +135,7 @@ best_rep_for_K <- function(lnL, k) {
     if (nrow(sub) > 0) sub$rep else NA
 }
 
-# --- SAMPLING SITES (real coords + town markers) -----------------------------
+# ─── SAMPLING SITES (real coords + town markers) ─────────────────────────────
 sites <- tibble::tribble(
     ~pop,  ~region,    ~lon,         ~lat,
     "AKL", "Rankin",   -91.3071148,   62.8372049,
@@ -163,7 +162,7 @@ towns_sf <- st_as_sf(tibble::tribble(
     "Baker Lake",    -96.077,       64.318
 ), coords = c("lon","lat"), crs = 4326)
 
-# --- PANEL A: Global map (MU-style: region labels only, no town markers) -----
+# ─── FIGURE 1: standalone sampling map ───────────────────────────────────────
 cat("Loading shapefiles from ", SHP_DIR, "...\n", sep = "")
 bbox_A   <- st_bbox(c(xmin = -99, xmax = -82, ymin = 61.5, ymax = 68.5), crs = 4326)
 bbox_sfA <- st_as_sfc(bbox_A)
@@ -172,7 +171,7 @@ canadaA  <- read_sf(file.path(SHP_DIR, "lpr_000b21a_e.shp")) %>%
 lakesA   <- read_sf(file.path(SHP_DIR, "waterbody_2.shp")) %>%
     st_transform(4326) %>% st_crop(bbox_sfA) %>% st_simplify(dTolerance = 0.005)
 
-cat("Building Panel A (global map)...\n")
+cat("Building Figure 1 (sampling map)...\n")
 pres_pops_map <- intersect(POP_ORDER, unique(as.character(sites_sf$pop)))
 pres_regs_map <- intersect(c("Baker","Naujaat","Rankin"),
                            unique(as.character(sites_sf$region)))
@@ -248,12 +247,6 @@ build_global_map <- function(legend_position = "none",
     p
 }
 
-# Map for the composite figure (no legend, no title - legend comes from PCA)
-p_map <- build_global_map(legend_position = "none",
-                          point_size = 2.0, label_size = 3.6) +
-    labs(title = "a) Sampling sites across the Kivalliq region",
-         x = NULL, y = NULL)
-
 # Standalone map for Figure 1 of the manuscript (full legend, no panel-letter)
 p_map_standalone <- build_global_map(legend_position = "right",
                                      point_size = 2.5, label_size = 4.3) +
@@ -261,7 +254,7 @@ p_map_standalone <- build_global_map(legend_position = "right",
 
 # --- Inset: whole Hudson Bay overview with a red box on the study region ----
 # Low-detail locator map (coarse simplify) showing where the study area sits
-# in the NW corner of Hudson Bay. Added to the STANDALONE Fig1 only.
+# in the NW corner of Hudson Bay.
 cat("Building Hudson Bay inset...\n")
 bbox_inset    <- st_bbox(c(xmin = -100, xmax = -74, ymin = 51, ymax = 69), crs = 4326)
 bbox_sf_inset <- st_as_sfc(bbox_inset)
@@ -294,7 +287,7 @@ ggsave(file.path(FIG_DIR, "Fig1_Overview_map.pdf"), p_map_standalone,
 ggsave(file.path(FIG_DIR, "Fig1_Overview_map.png"), p_map_standalone,
        width = 9, height = 7, dpi = 300)
 
-# --- PANEL B: Global PCA -----------------------------------------------------
+# ─── PANEL A: Global PCA ─────────────────────────────────────────────────────
 global_prefix <- file.path(PCA_DIR, paste0("global_", SUFFIX))
 cat("Loading global PCA:", global_prefix, "\n")
 pca_global <- load_pca(global_prefix)
@@ -318,7 +311,7 @@ make_global_pca <- function(pca_obj) {
                            breaks = pres_regs, name = "Region") +
         labs(x = paste0("PC1 (", eig[1], "%)"),
              y = paste0("PC2 (", eig[2], "%)"),
-             title = "b) Global PCA (all 13 populations)") +
+             title = "a) Global PCA (all 13 populations)") +
         theme_bw(base_size = 11) +
         theme(panel.grid.minor = element_blank(),
               plot.title = element_text(face = "bold", size = 12),
@@ -330,7 +323,7 @@ make_global_pca <- function(pca_obj) {
 }
 p_pca <- make_global_pca(pca_global)
 
-# --- PANEL C: Global NGSadmix barplot ----------------------------------------
+# ─── PANEL B: Global NGSadmix barplot ────────────────────────────────────────
 cat("Selecting best NGSadmix replicate for K =", GLOBAL_K, "\n")
 lnL  <- parse_all_lnL(LOG_DIR, GLOBAL_ADMIX_PREFIX)
 brep <- best_rep_for_K(lnL, GLOBAL_K)
@@ -371,7 +364,7 @@ make_global_admix <- function(qopt_file, bamlist, K) {
                            labels = as.character(region_info$region_f),
                            expand = c(0, 0)) +
         scale_y_continuous(expand = c(0, 0)) +
-        labs(title = sprintf("c) Global NGSadmix (K=%d)", K),
+        labs(title = sprintf("b) Global NGSadmix (K=%d)", K),
              y = "Ancestral proportion", x = "") +
         theme_minimal(base_size = 11) +
         theme(axis.text.x = element_text(size = 9, face = "bold",
@@ -384,11 +377,16 @@ make_global_admix <- function(qopt_file, bamlist, K) {
 }
 p_admix <- make_global_admix(qopt_file, GLOBAL_BAMLIST, GLOBAL_K)
 
-# --- ASSEMBLE (2 columns: map left, PCA + admixture stacked right) -----------
-right_col <- (p_pca / p_admix) + plot_layout(heights = c(1.5, 1.0))
-final <- (p_map | right_col) + plot_layout(widths = c(1.0, 1.3))
+# ─── ASSEMBLE FIGURE 2 (PCA on top, admixture below) ─────────────────────────
+# guides = "collect" pulls the PCA legend out to the right of the whole
+# assembly, so both panels are drawn at the same plotting width and their
+# left edges align. Without this, the legend would shrink panel (a) only.
+final <- (p_pca / p_admix) +
+    plot_layout(heights = c(1.5, 1.0), guides = "collect") &
+    theme(legend.position = "right")
+
 ggsave(file.path(FIG_DIR, "Fig2_Global_structure.pdf"), final,
-       width = 16, height = 10, device = cairo_pdf)
+       width = 9, height = 9, device = cairo_pdf)
 ggsave(file.path(FIG_DIR, "Fig2_Global_structure.png"), final,
-       width = 16, height = 10, dpi = 300)
+       width = 9, height = 9, dpi = 300)
 cat("\n=== DONE === Fig2_Global_structure + Fig1_Overview_map saved to", FIG_DIR, "\n")
