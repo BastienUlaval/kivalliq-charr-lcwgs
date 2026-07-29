@@ -11,22 +11,34 @@ during the project but did not make it into the final article (environmental
 RDA, dispersal assignment, D-stat pairwise significance heatmaps, etc.) are
 not included.
 
+## Citation
+
+Rubin, B., et al. (in review). Fine-scale genetic structure and Atlantic
+introgression in anadromous Arctic Charr across a contact zone in the
+Kivalliq region, Nunavut. *Canadian Journal of Fisheries and Aquatic Sciences*.
+
+Data: Dryad [DOI]  ·  Archived code: Zenodo [DOI]
+
 ## Requirements
 
-- SLURM cluster with ANGSD, ngsParalog, ngsLD, NGSadmix, PCAngsd installed
-- R with `data.table`, `ggplot2`, `dplyr`, `tidyr`, `patchwork`, `vegan`,
-  `readr`, `reshape2`, `scales`, `stringr`, `viridisLite`, `sf`,
-  `ggspatial`, `ggrepel`, `GenomicRanges`, `marmap`
-  (marmap only needed for `compute_hydro_distances.R`, in its own env)
-- Python 3 (utility scripts, standard library only)
+- SLURM cluster with ANGSD, ngsParalog, ngsLD, NGSadmix and PCAngsd installed
+- R and Python dependencies: `conda env create -f environment.yml`
 
-**Important:** point `RSCRIPT` in `config/00_config.sh` at an R installation
-that has `nlme` and `vegan` installed together without conflict. A generic
-"system R" module can silently break the Mantel/IBD step — use a dedicated
-conda/renv environment.
+**Important:** `RSCRIPT` in `config/00_config.sh` must point at the R inside
+the conda environment created in step 0, not at a system R module:
+
+```bash
+export RSCRIPT="$(conda info --base)/envs/kivalliq-charr/bin/Rscript"
+```
+
+The bash scripts call `$RSCRIPT` explicitly, so activating the environment in
+your shell is not enough. A generic system R can silently break the Mantel/IBD
+step through an `nlme`/`vegan` conflict.
 
 ## Setup
 
+0. Create and activate the analysis environment:
+   `conda env create -f environment.yml && conda activate kivalliq-charr`
 1. Edit `config/00_config.sh` — fill in the **USER-SPECIFIC PATHS** section
    at the top (pipeline root, reference genome, existing BAM/metadata
    source, program binaries, R installation).
@@ -57,6 +69,24 @@ so relative comparisons are not compromised. This is disclosed in the
 manuscript's Methods and Limitations and should be disclosed by anyone
 reusing this reference.
 
+## Software versions
+
+Versions used to produce the results reported in the manuscript. The bash
+scripts load these as cluster modules; pin them explicitly rather than relying
+on module defaults, which change over time.
+
+| Software | Version |
+|---|---|
+| ANGSD | 0.931 |
+| realSFS / thetaStat | ANGSD 0.931 `misc/` |
+| ngsParalog | [TODO] |
+| ngsLD | [TODO] |
+| NGSadmix | [TODO] |
+| PCAngsd | [TODO] |
+| samtools | [TODO] |
+| bedtools | [TODO] |
+| R and R packages | see `environment.yml` |
+
 ## K selection (admixture)
 
 Optimal K (global = 7, Rankin Inlet = 2, Naujaat = 5) was **not** chosen by
@@ -76,8 +106,8 @@ Methods ("Admixture analysis") for details.
 | 01 | `01_ngsparalog.sh` | Paralog/deviant site detection (per chromosome) | — |
 | 02 | `02_genotype_likelihoods.sh` → `02B_concat_beagle.sh` | GL/MAF on canonical SNPs, concatenate | — |
 | 03 | `03A_ngsLD.sh` → `03B_ld_decay.sh` → `03C_ld_pruning.sh` → `03D_concat_pruned.sh` | LD estimation, decay, pruning | — |
-| 04 | `04_pca.sh` | PCAngsd (global, Rankin, Naujaat) | Fig. 2b, 3c-d |
-| 05 | `05_admixture.sh` | NGSadmix (global, Rankin, Naujaat); K chosen via StructureSelector (see above) | Fig. 2c, 3e-f |
+| 04 | `04_pca.sh` | PCAngsd (global, Rankin, Naujaat) | Fig. 2a, 3c-d |
+| 05 | `05_admixture.sh` | NGSadmix (global, Rankin, Naujaat); K chosen via StructureSelector (see above) | Fig. 2b, 3e-f |
 | 06 | `06_fst.sh` | Pairwise FST (78 pairs) + sliding window | Fig. S1, S2; Fig. 6b |
 | 07 | `07_thetas.sh` | Nucleotide diversity (π, θW, Tajima's D) | Table 2; Fig. 6c |
 | 08 | `08_mask_deviants.sh` | Masked ancestral genome (feeds into 07) | — |
@@ -91,15 +121,18 @@ not submitted via `sbatch`):
 - `plot_panel_regional_structure.R <base_dir> <shp_dir>` — Fig. 3 (regional PCA/admixture)
 - `plot_management_units.R <base_dir> <shp_dir>` — Fig. 6 (synthesis / management units)
 
+All three take an optional third argument, an R library path, for
+installations where the packages are not on the default `.libPaths()`.
+
 ## Repository layout
 
 ```
-config/00_config.sh       — paths, filtering parameters, populations
+environment.yml            — conda specification for all R and Python dependencies
+config/00_config.sh        — paths, filtering parameters, populations
 01_scripts/bash/           — SLURM submission scripts (numbered by execution order)
-01_scripts/R/               — R analysis and plotting scripts
-01_scripts/utils/           — Python helpers (Beagle file manipulation)
+01_scripts/R/              — R analysis and plotting scripts
+01_scripts/utils/          — Python helpers (Beagle file manipulation)
 ```
-
 
 ## AI use declaration
 
