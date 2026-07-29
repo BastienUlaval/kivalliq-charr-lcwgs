@@ -30,15 +30,25 @@
 #   (continent = grey92, lakes = white, sea/background = white) so that the
 #   population points stand out as on the Regional figure.
 #
-# RUN ON THOTH:
-#   /home/barub/miniconda/envs/ibe_env/bin/Rscript plot_panel_global_structure.R
+# USAGE:
+#   Rscript plot_panel_global_structure.R <base_dir> <shp_dir> [<r_lib_path>]
 #
-# All paths hardcoded from config/00_config.sh. Override the few variables in
-# the CONFIG block below if your layout changes.
+#     base_dir    = pipeline root (BASE_DIR in config/00_config.sh)
+#     shp_dir     = directory holding the basemap shapefiles (not redistributed
+#                   in this repo, see README)
+#     r_lib_path  = optional, only needed if packages are not on the default
+#                   R library path
 # =============================================================================
 
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 2) {
+    stop("Usage: Rscript plot_panel_global_structure.R <base_dir> <shp_dir> [<r_lib_path>]")
+}
+BASE_DIR <- args[1]
+SHP_DIR  <- args[2]
+if (length(args) >= 3) .libPaths(args[3])
+
 suppressPackageStartupMessages({
-    .libPaths("/project/lbernatchez/users/barub/Rlibs")
     library(ggplot2)
     library(dplyr)
     library(tidyr)
@@ -50,14 +60,12 @@ suppressPackageStartupMessages({
 })
 sf_use_s2(FALSE)
 
-# ─── CONFIG (hardcoded from 00_config.sh) ────────────────────────────────────
-BASE_DIR  <- "/project/lbernatchez/users/barub/chap1/lcWGS/angsd_pipeline2"
+# ─── CONFIG (derived from base_dir/shp_dir arguments) ────────────────────────
 PCA_DIR   <- file.path(BASE_DIR, "04_pca")
 ADMIX_DIR <- file.path(BASE_DIR, "05_admixture", "global")
 LOG_DIR   <- ADMIX_DIR                       # NGSadmix .log files live alongside .qopt
 INFO_DIR  <- file.path(BASE_DIR, "02_info")
 FIG_DIR   <- file.path(BASE_DIR, "99_figures")
-SHP_DIR   <- "/project/lbernatchez/users/barub/carte/shp"
 SUFFIX    <- "maf0.05_pctind0.50_maxdepth8_prunednosex"
 
 # Bamlist (individual order, matching .cov.pca and .qopt row order)
