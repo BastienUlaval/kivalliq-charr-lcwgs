@@ -1,0 +1,61 @@
+# =============================================================================
+# environment.yml -- R environment for the Kivalliq Arctic charr lcWGS pipeline
+#
+#   conda env create -f environment.yml
+#   conda activate kivalliq-charr
+#   Rscript 01_scripts/R/plot_panel_global_structure.R <base_dir> <shp_dir>
+#
+# This env covers every R script in 01_scripts/R/ and the Python helpers in
+# 01_scripts/utils/. It does NOT install ANGSD, ngsParalog, ngsLD, NGSadmix or
+# PCAngsd -- those are loaded as cluster modules by the bash scripts (see the
+# "Software versions" section of the README).
+#
+# Installing r-sf through conda-forge (rather than compiling against a system
+# GDAL) is deliberate: mixing a system libgdal with a conda libsqlite3 produces
+#   undefined symbol: sqlite3_total_changes64
+# at library load time. Keeping GDAL, GEOS, PROJ and SQLite inside one env
+# avoids this.
+#
+# TODO before archiving on Zenodo: replace the version floors below with the
+# exact versions used, obtained with
+#   conda env export --from-history > environment.lock.yml
+# =============================================================================
+name: kivalliq-charr
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  # --- R itself ------------------------------------------------------------
+  - r-base>=4.3
+
+  # --- data handling -------------------------------------------------------
+  - r-data.table
+  - r-dplyr
+  - r-tidyr
+  - r-readr
+  - r-reshape2
+  - r-stringr
+
+  # --- plotting ------------------------------------------------------------
+  - r-ggplot2
+  - r-patchwork
+  - r-scales
+  - r-viridislite
+  - r-ggrepel
+
+  # --- spatial (install together; see note above) --------------------------
+  - r-sf
+  - r-ggspatial
+  - r-marmap          # compute_hydro_distances.R only
+
+  # --- statistics ----------------------------------------------------------
+  - r-vegan           # Mantel / partial Mantel in ibd_analysis.R
+  - r-nlme            # must resolve alongside vegan without conflict
+
+  # --- Bioconductor --------------------------------------------------------
+  - bioconductor-genomicranges
+
+  # --- Python helpers (standard library only, but pin the interpreter) -----
+  - python>=3.9
