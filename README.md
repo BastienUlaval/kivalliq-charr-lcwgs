@@ -69,23 +69,6 @@ so relative comparisons are not compromised. This is disclosed in the
 manuscript's Methods and Limitations and should be disclosed by anyone
 reusing this reference.
 
-## Software versions
-
-Versions used to produce the results reported in the manuscript. The bash
-scripts load these as cluster modules; pin them explicitly rather than relying
-on module defaults, which change over time.
-
-| Software | Version |
-|---|---|
-| ANGSD | 0.931 |
-| realSFS / thetaStat | ANGSD 0.931 `misc/` |
-| ngsParalog | [TODO] |
-| ngsLD | [TODO] |
-| NGSadmix | [TODO] |
-| PCAngsd | [TODO] |
-| samtools | [TODO] |
-| bedtools | [TODO] |
-| R and R packages | see `environment.yml` |
 
 ## K selection (admixture)
 
