@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 34_marine_distances.R - Least-cost marine distances for the Kivalliq
+# 14A_marine_distances.R - Least-cost marine distances for the Kivalliq
 #
 # Produces:
-#   1. 02_info/connectivity_covariates.csv  -> input for 35_variance_partitioning.R
+#   1. 02_info/connectivity_covariates.csv  -> input for 14B_variance_partitioning.R
 #   2. 02_info/hydro_dist_pops.csv          -> fills the Hydro_km column that has
 #                                              been NA in Table_IBD_pairwise.csv
 #
@@ -31,7 +31,7 @@
 #   saved as 02_info/bathy/kivalliq_etopo.tif (other location: BATHY_TIF=<path>)
 #
 # Run from the pipeline root (BASE_DIR):
-#   $RSCRIPT 01_scripts/R/34_marine_distances.R
+#   $RSCRIPT 01_scripts/R/14A_marine_distances.R
 # =============================================================================
 
 if (nzchar(Sys.getenv("RLIB"))) .libPaths(c(Sys.getenv("RLIB"), .libPaths()))
@@ -191,7 +191,7 @@ for (i in seq_len(nrow(out))) {
 out[, d_min  := pmin(d_HS, d_FH)]
 out[, d_diff := d_HS - d_FH]
 
-# Column names expected by 33_connectivity_gradient.R
+# Column names expected by 14B_variance_partitioning.R
 out[, marine_corridor_km := d_HS]
 out[, coast_km := freshwater_km]
 

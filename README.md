@@ -104,9 +104,9 @@ part of this assembly.
 | 09 | `compute_hydro_distances.R` → `09_ibd.sh` | Hydrographic distances, isolation by distance (Mantel) | Fig. 6d |
 | 10 | `10A`…`10F` (`10_RUN_triangle_pipeline.sh`) | Diagnostic SNPs, hybrid index vs interancestry heterozygosity | Fig. 5 |
 | 11 | `11_dstats.sh` → `11B_dstats_figures.sh` | D-statistics D(JAY, P; LLS, DV), ANGSD `-doAbbababa2` | Fig. 4; Table 2 |
-| 12 | `24A_mito_extract.sh submit` → `24A_mito_extract.sh merge` → `24B_mito_lineage.R` | Consensus mitogenome per fish, Arctic/Atlantic mitochondrial lineage | Discussion (mtDNA) |
-| 13 | `44_rankin_pca_groups.sh` → `45_plot_rankin_chrom_cor.R` → `hi_by_group_3groups.R` | Per-chromosome PCA of Rankin Inlet, PCA groups, hybrid index by group | Fig. S5; Results |
-| 14 | `34_marine_distances.R` → `35_variance_partitioning.R` | Distance to the Atlantic entry corridor; variance partitioning of D between latitude and corridor distance (varpart, partial RDA, 9,999 permutations), with and without HOR and PAM | Fig. S2; Table S1 |
+| 12 | `12A_mito_extract.sh submit` → `12A_mito_extract.sh merge` → `12B_mito_lineage.R` | Consensus mitogenome per fish, Arctic/Atlantic mitochondrial lineage | Discussion (mtDNA) |
+| 13 | `13A_rankin_pca_by_chrom.sh` → `13B_plot_rankin_chrom_cor.R` → `13C_hybrid_index_by_group.R` | Per-chromosome PCA of Rankin Inlet, PCA groups, hybrid index by group | Fig. S5; Results |
+| 14 | `14A_marine_distances.R` → `14B_variance_partitioning.R` | Distance to the Atlantic entry corridor; variance partitioning of D between latitude and corridor distance (varpart, partial RDA, 9,999 permutations), with and without HOR and PAM | Fig. S2; Table S1 |
 
 ### Two distance calculations
 
@@ -114,7 +114,7 @@ part of this assembly.
   for isolation by distance (Fig. 6d). For the lake and headwater sites (HOR,
   PAM, NOP), a channel length measured in Google Earth is added to the marine
   path (HOR: 402 km to open water).
-- `34_marine_distances.R` (terra + igraph, 8-neighbour graph on ETOPO 2022)
+- `14A_marine_distances.R` (terra + igraph, 8-neighbour graph on ETOPO 2022)
   gives each site's distance to the eastern entrance of Hudson Strait, used in
   the variance partitioning (Fig. S2, Table S1). Sites are snapped to the
   largest connected marine component; HOR gets a fixed 300 km freshwater leg
@@ -127,13 +127,13 @@ site coordinates, Heredity sizes), which must be in the same folder.
 
 | Script | Output | Arguments |
 |---|---|---|
-| `36_Fig1_map.R` | Fig. 1 — study area | `<base_dir> <shp_dir>` |
-| `37_Fig2_global_structure.R` | Fig. 2 — global PCA + NGSadmix K = 8; Fig. S1 — K = 7 vs K = 8 | `<base_dir> [K_main] [K_supp]` |
-| `38_Fig3_regional_structure.R` | Fig. 3 — maps, PCA and NGSadmix within Rankin Inlet (K = 2) and Naujaat (K = 5) | `<base_dir> <shp_dir>` |
-| `39_Fig6_differentiation_diversity.R` | Fig. 6 — design, FST, π, isolation by distance | `<base_dir> <shp_dir>` |
-| `42_plot_admix_global_K.R` | Global NGSadmix for any set of K | `<base_dir> <K> [<K> ...]` |
+| `15_Fig1_map.R` | Fig. 1 — study area | `<base_dir> <shp_dir>` |
+| `16_Fig2_global_structure.R` | Fig. 2 — global PCA + NGSadmix K = 8; Fig. S1 — K = 7 vs K = 8 | `<base_dir> [K_main] [K_supp]` |
+| `17_Fig3_regional_structure.R` | Fig. 3 — maps, PCA and NGSadmix within Rankin Inlet (K = 2) and Naujaat (K = 5) | `<base_dir> <shp_dir>` |
+| `18_Fig6_differentiation_diversity.R` | Fig. 6 — design, FST, π, isolation by distance | `<base_dir> <shp_dir>` |
+| `19_plot_admix_global_K.R` | Global NGSadmix for any set of K | `<base_dir> <K> [<K> ...]` |
 
-Example: `$RSCRIPT 01_scripts/R/38_Fig3_regional_structure.R "$BASE_DIR" "$SHP_DIR"`.
+Example: `$RSCRIPT 01_scripts/R/17_Fig3_regional_structure.R "$BASE_DIR" "$SHP_DIR"`.
 Outputs go to `99_figures/heredity/` (PDF, and PNG/TIFF at 600 dpi).
 
 ## Repository layout

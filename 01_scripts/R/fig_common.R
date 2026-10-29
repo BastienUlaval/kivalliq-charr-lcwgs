@@ -1,8 +1,8 @@
 # =============================================================================
 # fig_common.R — shared settings for the Heredity figures (Kivalliq charr)
 #
-# Sourced by 36_Fig1_map.R, 37_Fig2_global_structure.R,
-# 38_Fig3_regional_structure.R and 39_Fig6_differentiation_diversity.R.
+# Sourced by 15_Fig1_map.R, 16_Fig2_global_structure.R,
+# 17_Fig3_regional_structure.R and 18_Fig6_differentiation_diversity.R.
 #
 # Changes compared with the earlier scripts (JS comments on Draft 6):
 #   - one GEOGRAPHIC population order used in every figure (c149)

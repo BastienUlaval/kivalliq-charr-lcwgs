@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 37_Fig2_global_structure.R — Figure 2 and Figure S1 (Heredity)
+# 16_Fig2_global_structure.R — Figure 2 and Figure S1 (Heredity)
 #
 #   Fig. 2   (a) global PCA, PC1 vs PC2, 95% ellipses per zone
 #            (b) global NGSadmix at K_MAIN (default 8), best replicate
@@ -12,13 +12,13 @@
 # Fig. 2b, and at K = 7 PAM shows as a mix of the colours of other clusters.
 #
 # Usage (from the pipeline root, no sbatch needed, < 1 min):
-#   $RSCRIPT 01_scripts/R/37_Fig2_global_structure.R $PWD          # main K = 8, supp K = 7
-#   $RSCRIPT 01_scripts/R/37_Fig2_global_structure.R $PWD 8 7      # explicit
+#   $RSCRIPT 01_scripts/R/16_Fig2_global_structure.R $PWD          # main K = 8, supp K = 7
+#   $RSCRIPT 01_scripts/R/16_Fig2_global_structure.R $PWD 8 7      # explicit
 # Output: 99_figures/heredity/Fig2_global_structure.{pdf,png,tiff}
 #         99_figures/heredity/FigS1_admix_global_K7_K8.{pdf,png,tiff}
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 1) stop("Usage: Rscript 37_Fig2_global_structure.R <base_dir> [K_main] [K_supp]")
+if (length(args) < 1) stop("Usage: Rscript 16_Fig2_global_structure.R <base_dir> [K_main] [K_supp]")
 BASE_DIR <- args[1]
 K_MAIN <- if (length(args) >= 2) as.integer(args[2]) else 8L
 K_SUPP <- if (length(args) >= 3) as.integer(args[3]) else 7L

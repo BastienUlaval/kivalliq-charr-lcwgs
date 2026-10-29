@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# 24A_mito_extract.sh — Mitochondrial consensus sequence per individual
+# 12A_mito_extract.sh — Mitochondrial consensus sequence per individual
 #
 #   Mitogenome in the reference: NC_000861.1 (S. alpinus, 16,659 bp)
 #   Coverage is very high (~750x for a 2x nuclear sample), so a simple
@@ -10,15 +10,15 @@
 #
 # BAM list: 02_info/bam_mito.filelist = bam.filelist (the 405 Kivalliq fish,
 #   from 00_setup.sh) + JAY (Arctic reference) + LLS (Atlantic reference)
-#   + DV (outgroup, used only to root the tree in 24B). Built by "submit".
+#   + DV (outgroup, used only to root the tree in 12B). Built by "submit".
 #
 # From angsd_pipeline2/:
-#   1) bash 01_scripts/bash/24A_mito_extract.sh submit   (builds the list, submits the array)
+#   1) bash 01_scripts/bash/12A_mito_extract.sh submit   (builds the list, submits the array)
 #   2) when all jobs are done:
-#      bash 01_scripts/bash/24A_mito_extract.sh merge
+#      bash 01_scripts/bash/12A_mito_extract.sh merge
 # =============================================================================
-#SBATCH -J "24A_mito"
-#SBATCH -o logs/24A_mito_%A_%a.out
+#SBATCH -J "12A_mito"
+#SBATCH -o logs/12A_mito_%A_%a.out
 #SBATCH -c 1
 #SBATCH -p small
 #SBATCH --time=0-01:00

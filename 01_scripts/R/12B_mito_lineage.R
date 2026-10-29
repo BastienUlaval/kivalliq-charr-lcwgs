@@ -1,7 +1,7 @@
 # =============================================================================
-# 24B_mito_lineage.R — Arctic or Atlantic mitochondrial lineage of each fish
+# 12B_mito_lineage.R — Arctic or Atlantic mitochondrial lineage of each fish
 #
-# Input : 24_mito/mito_all.fasta (16,659 bp per fish, already aligned; 24A)
+# Input : 24_mito/mito_all.fasta (16,659 bp per fish, already aligned; 12A)
 #         02_info/bamlists/<POP>.bamlist   (population of each sample)
 #         04_figures/triangle/Table_HybridIndex.csv (nuclear hybrid index)
 # Kept  : 13 Kivalliq populations + JAY + LLS (Greenland removed; Dolly Varden
@@ -16,7 +16,7 @@
 #            neighbour-joining tree rooted on Dolly Varden
 #
 # Run from angsd_pipeline2/:
-#   $RSCRIPT 01_scripts/R/24B_mito_lineage.R
+#   $RSCRIPT 01_scripts/R/12B_mito_lineage.R
 # =============================================================================
 suppressPackageStartupMessages({ library(ape); library(data.table); library(ggplot2) })
 
@@ -26,7 +26,7 @@ BLD  <- "02_info/bamlists"
 HIF  <- "04_figures/triangle/Table_HybridIndex.csv"
 FIX  <- 0.90       # within-reference frequency for a site to be diagnostic
 
-# same ID rule as 24A_mito_extract.sh
+# same ID rule as 12A_mito_extract.sh
 sample_id <- function(x) {
     x <- basename(x)
     x <- sub("\\.(trimmed|sorted|dedup|no_overlap|merged|markdup|rmdup|realigned|filtered|bam).*$", "", x)

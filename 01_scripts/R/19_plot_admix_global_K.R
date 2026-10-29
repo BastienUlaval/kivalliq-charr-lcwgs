@@ -1,14 +1,14 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 42_plot_admix_global_K.R — global NGSadmix barplots for one or several K,
+# 19_plot_admix_global_K.R — global NGSadmix barplots for one or several K,
 # stacked for comparison (same style as Fig. 2b). Best replicate for each K.
 #
 # Usage (from the pipeline root, no sbatch needed, < 1 min):
-#   $RSCRIPT 01_scripts/R/42_plot_admix_global_K.R $PWD 7 8
+#   $RSCRIPT 01_scripts/R/19_plot_admix_global_K.R $PWD 7 8
 # Output: 99_figures/heredity/Admix_global_K7_K8.{pdf,png,tiff}
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) stop("Usage: Rscript 42_plot_admix_global_K.R <base_dir> <K> [<K> ...]")
+if (length(args) < 2) stop("Usage: Rscript 19_plot_admix_global_K.R <base_dir> <K> [<K> ...]")
 BASE_DIR <- args[1]
 Ks <- as.integer(args[-1])
 script_dir <- dirname(normalizePath(sub("--file=", "", grep("--file=", commandArgs(FALSE), value = TRUE))))
