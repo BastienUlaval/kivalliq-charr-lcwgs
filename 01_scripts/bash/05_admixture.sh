@@ -6,8 +6,8 @@
 # Optimal K (global=7, Rankin=2, Naujaat=5) was selected via the
 # StructureSelector web tool from the resulting .qopt/.log files, not by a
 # script in this repo (see manuscript Methods). Once K is chosen, the
-# admixture barplots are built directly by plot_panel_global_structure.R
-# and plot_panel_regional_structure.R (Fig. 2c, 3e-f).
+# admixture barplots are built directly by 16_Fig2_global_structure.R
+# and 17_Fig3_regional_structure.R (Fig. 2b, 3e-f).
 # Usage: bash 01_scripts/bash/05_admixture.sh
 # =============================================================================
 
@@ -108,4 +108,4 @@ log_msg "  Naujaat: job ${JID_NAUJAAT} (K=${K_MIN}-${K_MAX_NAUJAAT}, ${NGSADMIX_
 log_msg ""
 log_msg "=== ALL 3 JOBS SUBMITTED ==="
 log_msg "When all 3 finish: upload the .qopt/.log files to StructureSelector"
-log_msg "to choose K, then run plot_panel_global_structure.R / plot_panel_regional_structure.R"
+log_msg "to choose K, then run 16_Fig2_global_structure.R / 17_Fig3_regional_structure.R"

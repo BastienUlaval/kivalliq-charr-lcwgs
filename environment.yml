@@ -3,7 +3,7 @@
 #
 #   conda env create -f environment.yml
 #   conda activate kivalliq-charr
-#   Rscript 01_scripts/R/plot_panel_global_structure.R <base_dir> <shp_dir>
+#   Rscript 01_scripts/R/15_Fig1_map.R <base_dir> <shp_dir>
 #
 # This env covers every R script in 01_scripts/R/ and the Python helpers in
 # 01_scripts/utils/. It does NOT install ANGSD, ngsParalog, ngsLD, NGSadmix or
@@ -49,13 +49,19 @@ dependencies:
   - r-sf
   - r-ggspatial
   - r-marmap          # compute_hydro_distances.R only
+  - r-terra           # 14A_marine_distances.R (bathymetry raster)
+  - r-igraph          # 14A_marine_distances.R (least-cost marine paths)
 
   # --- statistics ----------------------------------------------------------
   - r-vegan           # Mantel / partial Mantel in ibd_analysis.R
   - r-nlme            # must resolve alongside vegan without conflict
+  - r-ape             # 12B_mito_lineage.R (mitochondrial tree)
 
   # --- Bioconductor --------------------------------------------------------
   - bioconductor-genomicranges
+
+  # --- command-line tools ------------------------------------------------
+  - samtools>=1.16    # 12A_mito_extract.sh (samtools consensus)
 
   # --- Python helpers (standard library only, but pin the interpreter) -----
   - python>=3.9
