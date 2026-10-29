@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 39_Fig6_differentiation_diversity.R — Figure 6 (Heredity)
+# 18_Fig6_differentiation_diversity.R — Figure 6 (Heredity)
 #   (a) Sampling design (zones)
 #   (b) Pairwise weighted FST within and between zones
 #   (c) Nucleotide diversity (pi) per population
@@ -19,11 +19,11 @@
 #   <base_dir>/14_ibd/Table_IBD_Mantel.csv          Group, Distance, Mantel_r, Mantel_p
 #
 # Usage:
-#   Rscript 39_Fig6_differentiation_diversity.R <base_dir> <shp_dir> [<r_lib_path>]
+#   Rscript 18_Fig6_differentiation_diversity.R <base_dir> <shp_dir> [<r_lib_path>]
 #   Output: <base_dir>/99_figures/heredity/Fig6_differentiation_diversity.{pdf,png,tiff}
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) stop("Usage: Rscript 39_Fig6_differentiation_diversity.R <base_dir> <shp_dir> [<r_lib_path>]")
+if (length(args) < 2) stop("Usage: Rscript 18_Fig6_differentiation_diversity.R <base_dir> <shp_dir> [<r_lib_path>]")
 BASE_DIR <- args[1]; SHP_DIR <- args[2]
 if (length(args) >= 3) .libPaths(args[3])
 script_dir <- dirname(normalizePath(sub("--file=", "", grep("--file=", commandArgs(FALSE), value = TRUE))))

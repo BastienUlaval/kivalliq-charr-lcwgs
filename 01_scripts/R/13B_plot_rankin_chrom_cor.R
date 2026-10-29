@@ -1,6 +1,6 @@
 # =============================================================================
-# 45_plot_rankin_chrom_cor.R — Visualise the per-chromosome check of the
-# second Rankin Inlet PCA group (output of 44_rankin_pca_groups.sh)
+# 13B_plot_rankin_chrom_cor.R — Visualise the per-chromosome check of the
+# second Rankin Inlet PCA group (output of 13A_rankin_pca_by_chrom.sh)
 #
 # Panel a: |r| between genome-wide PC1 and each chromosome's PCs (one bar per
 #          chromosome). Inversion = one bar near 1, the others near 0.
@@ -9,7 +9,7 @@
 #          (highest and lowest |r|), coloured by PCA group.
 #
 # Run from angsd_pipeline2/:
-#   $RSCRIPT 01_scripts/R/45_plot_rankin_chrom_cor.R
+#   $RSCRIPT 01_scripts/R/13B_plot_rankin_chrom_cor.R
 # =============================================================================
 suppressPackageStartupMessages({ library(ggplot2); library(data.table) })
 
@@ -43,7 +43,7 @@ pop <- find_code(paste(ids, gt$pop[m]))
 if (anyNA(pop)) { cat("Sample IDs without a population code (first 5):\n"); print(head(ids[is.na(pop)], 5)) }
 pop <- factor(pop, levels = CODES)
 # Population colours: taken from fig_common.R, the file used by
-# 38_Fig3_regional_structure.R, so every fish has the colour it has in Fig. 3c
+# 17_Fig3_regional_structure.R, so every fish has the colour it has in Fig. 3c
 fc <- "01_scripts/R/fig_common.R"
 POP_COLORS <- NULL
 if (file.exists(fc)) {
@@ -101,7 +101,7 @@ pc <- ggplot(pcd, aes(PC1, PC2, colour = pop, shape = group)) +
     guides(colour = "none", shape = "none") +
     theme_bw(base_size = 9) + theme(plot.title = element_text(size = 8, hjust = 0.5))
 cat("\n--- PCA group by population ---\n"); print(addmargins(table(pcd$group, pcd$pop)))
-cat("\n--- New groups vs k-means groups of script 44 ---\n"); print(table(pcd$group, gt$group[m]))
+cat("\n--- New groups vs k-means groups of script 13A ---\n"); print(table(pcd$group, gt$group[m]))
 fwrite(data.table(sample = ids, pop = pop, PC1 = G[, 1], PC2 = G[, 2], group = grp),
        file.path(OUT, "rankin_pca_3groups.tsv"), sep = "\t")
 

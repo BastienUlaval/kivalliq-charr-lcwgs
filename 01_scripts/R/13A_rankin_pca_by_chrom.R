@@ -1,5 +1,5 @@
 # =============================================================================
-# 44_rankin_pca_groups.R — Who are the two groups in the Rankin Inlet PCA?
+# 13A_rankin_pca_by_chrom.R — Who are the two groups in the Rankin Inlet PCA?
 #
 # Mode "groups"  : PC scores from the Rankin covariance matrix, k-means groups,
 #                  composition by population, depth (mapped reads) and F by group.
@@ -10,8 +10,8 @@
 #                  (relatives, another stock, or a technical batch).
 #
 # Usage:
-#   Rscript 44_rankin_pca_groups.R groups <cov> <bamlist> <out_dir> [mapped_reads.tsv] [F_individual.tsv]
-#   Rscript 44_rankin_pca_groups.R chroms <cov> <chrom_dir> <out_dir>
+#   Rscript 13A_rankin_pca_by_chrom.R groups <cov> <bamlist> <out_dir> [mapped_reads.tsv] [F_individual.tsv]
+#   Rscript 13A_rankin_pca_by_chrom.R chroms <cov> <chrom_dir> <out_dir>
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
 mode <- args[1]

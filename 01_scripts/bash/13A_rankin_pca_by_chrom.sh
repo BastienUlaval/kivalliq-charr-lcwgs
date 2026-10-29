@@ -1,16 +1,16 @@
 #!/bin/bash
 # =============================================================================
-# 44_rankin_pca_groups.sh — Check what drives the two groups in the Rankin PCA
+# 13A_rankin_pca_by_chrom.sh — Check what drives the two groups in the Rankin PCA
 #   1) groups: who is in each group (population, mapped reads, inbreeding F)
 #   2) chroms: PCAngsd per chromosome on the Rankin pruned Beagle, compared with
 #      the genome-wide PCA (inversion vs genome-wide signal)
 # Uses only existing files: 04_pca/rankin_*.cov, rankin.bamlist,
 # 03C_ld_pruning/rankin_*.beagle.gz, 18_inbreeding/F_individual.tsv, the BAMs.
-# Submit from angsd_pipeline2/:  sbatch 01_scripts/bash/44_rankin_pca_groups.sh
+# Submit from angsd_pipeline2/:  sbatch 01_scripts/bash/13A_rankin_pca_by_chrom.sh
 # =============================================================================
-#SBATCH -J "44_rankin_groups"
+#SBATCH -J "13A_rankin_by_chrom"
 #SBATCH -p small
-#SBATCH -o 98_log_files/44_rankin_groups_%j.out
+#SBATCH -o 98_log_files/13A_rankin_by_chrom_%j.out
 #SBATCH -c 4
 #SBATCH --mem=20G
 #SBATCH --time=0-12:00
@@ -27,7 +27,7 @@ COV="${PCA_DIR}/rankin_${SUFFIX}_prunednosex.cov"
 BAMLIST="${INFO_DIR}/bamlists/rankin.bamlist"
 BEAGLE="${LD_DIR}/rankin_${SUFFIX}.prunednosex.beagle.gz"
 FIND="${BASE_DIR}/18_inbreeding/F_individual.tsv"
-R_SCRIPT=01_scripts/R/44_rankin_pca_groups.R
+R_SCRIPT=01_scripts/R/13A_rankin_pca_by_chrom.R
 for f in "$COV" "$BAMLIST" "$BEAGLE" "$R_SCRIPT"; do require_file "$f"; done
 
 # ---- 1. mapped reads per individual (fast: read from the BAM index) ----------

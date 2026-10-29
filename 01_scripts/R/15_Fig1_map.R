@@ -1,18 +1,18 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 36_Fig1_map.R — Figure 1 (Heredity): study area and sampling design
+# 15_Fig1_map.R — Figure 1 (Heredity): study area and sampling design
 #
-# Replaces the standalone map part of plot_panel_global_structure.R.
+# Map panel of Fig. 1 (study area).
 # Change requested by JS (c145): population codes larger and in bold.
 # Codes are now drawn in black on a white label, next to points coloured by
 # population and shaped by zone; zone names in their zone colour.
 #
 # Usage:
-#   Rscript 36_Fig1_map.R <base_dir> <shp_dir> [<r_lib_path>]
+#   Rscript 15_Fig1_map.R <base_dir> <shp_dir> [<r_lib_path>]
 #   Output: <base_dir>/99_figures/heredity/Fig1_map.{pdf,png,tiff}
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) stop("Usage: Rscript 36_Fig1_map.R <base_dir> <shp_dir> [<r_lib_path>]")
+if (length(args) < 2) stop("Usage: Rscript 15_Fig1_map.R <base_dir> <shp_dir> [<r_lib_path>]")
 BASE_DIR <- args[1]; SHP_DIR <- args[2]
 if (length(args) >= 3) .libPaths(args[3])
 script_dir <- dirname(normalizePath(sub("--file=", "", grep("--file=", commandArgs(FALSE), value = TRUE))))

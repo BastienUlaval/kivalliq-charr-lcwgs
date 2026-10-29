@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 38_Fig3_regional_structure.R — Figure 3 (Heredity): structure within zones
+# 17_Fig3_regional_structure.R — Figure 3 (Heredity): structure within zones
 #   (a) Rankin Inlet sites        (b) Naujaat sites
 #   (c) Rankin Inlet PCA          (d) Naujaat PCA      (95% ellipses per pop)
 #   (e) Rankin Inlet NGSadmix K=2 (f) Naujaat NGSadmix K=5
@@ -11,11 +11,11 @@
 # cluster palette, thin separators, larger bold site labels on the maps.
 #
 # Usage:
-#   Rscript 38_Fig3_regional_structure.R <base_dir> <shp_dir> [<r_lib_path>]
+#   Rscript 17_Fig3_regional_structure.R <base_dir> <shp_dir> [<r_lib_path>]
 #   Output: <base_dir>/99_figures/heredity/Fig3_regional_structure.{pdf,png,tiff}
 # =============================================================================
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 2) stop("Usage: Rscript 38_Fig3_regional_structure.R <base_dir> <shp_dir> [<r_lib_path>]")
+if (length(args) < 2) stop("Usage: Rscript 17_Fig3_regional_structure.R <base_dir> <shp_dir> [<r_lib_path>]")
 BASE_DIR <- args[1]; SHP_DIR <- args[2]
 if (length(args) >= 3) .libPaths(args[3])
 script_dir <- dirname(normalizePath(sub("--file=", "", grep("--file=", commandArgs(FALSE), value = TRUE))))

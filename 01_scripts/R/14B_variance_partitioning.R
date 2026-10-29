@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # =============================================================================
-# 35_variance_partitioning.R - Latitude vs marine connectivity as drivers of
+# 14B_variance_partitioning.R - Latitude vs marine connectivity as drivers of
 #   Atlantic introgression across the Kivalliq
 #
 # Variance partitioning is the primary analysis here, not model selection.
@@ -15,12 +15,12 @@
 #   99_figures/Fig_VarPart_Connectivity.png      Venn + scatter panels
 #
 # Inputs
-#   02_info/connectivity_covariates.csv          from 34_marine_distances.R
+#   02_info/connectivity_covariates.csv          from 14A_marine_distances.R
 #   99_figures/main/Table_Dstats_JAY.tsv         from 11B_dstats_figures.sh
 #                                                (other location: DSTAT_TABLE=<path>)
 #
 # Run from the pipeline root (BASE_DIR):
-#   $RSCRIPT 01_scripts/R/35_variance_partitioning.R
+#   $RSCRIPT 01_scripts/R/14B_variance_partitioning.R
 # =============================================================================
 
 if (nzchar(Sys.getenv("RLIB"))) .libPaths(c(Sys.getenv("RLIB"), .libPaths()))

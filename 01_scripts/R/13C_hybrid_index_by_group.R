@@ -1,9 +1,9 @@
 # =============================================================================
-# hi_by_group_3groups.R — Hybrid index of the three Rankin Inlet PCA groups
-#   (Main group, PC1 cluster, PC2 tail) defined by 45_plot_rankin_chrom_cor.R
+# 13C_hybrid_index_by_group.R — Hybrid index of the three Rankin Inlet PCA groups
+#   (Main group, PC1 cluster, PC2 tail) defined by 13B_plot_rankin_chrom_cor.R
 #
 # Usage (from angsd_pipeline2/):
-#   $RSCRIPT 01_scripts/R/hi_by_group_3groups.R <hybrid_index_table>
+#   $RSCRIPT 01_scripts/R/13C_hybrid_index_by_group.R <hybrid_index_table>
 #   <hybrid_index_table> = the per-individual table used for the triangle plot
 #   (one row per fish, with a 'bam' column and a hybrid-index column)
 # =============================================================================
