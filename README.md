@@ -18,7 +18,7 @@ Dallaire X, Harris L, Moore J-S (submitted). Fine-scale structure of a
 postglacial Atlantic-Arctic contact zone in anadromous Arctic Charr
 (*Salvelinus alpinus*), western Hudson Bay. *Heredity*.
 
-Data: NCBI SRA BioProject [accession] · Dryad [DOI] · Archived code: Zenodo [DOI]
+Data: _Waiting_
 
 ## Requirements
 
