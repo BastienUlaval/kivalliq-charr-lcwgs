@@ -13,10 +13,7 @@ not included.
 
 ## Citation
 
-Rubin B, Lecomte L, Faulkner C, Olsen A, Wiens L, Babin C, Normandeau E,
-Dallaire X, Harris L, Moore J-S (submitted). Fine-scale structure of a
-postglacial Atlantic-Arctic contact zone in anadromous Arctic Charr
-(*Salvelinus alpinus*), western Hudson Bay. *Heredity*.
+_Waiting_
 
 Data: _Waiting_
 
