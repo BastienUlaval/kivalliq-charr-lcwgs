@@ -102,7 +102,7 @@ part of this assembly.
 | 11 | `11_dstats.sh` → `11B_dstats_figures.sh` | D-statistics D(JAY, P; LLS, DV), ANGSD `-doAbbababa2` | Fig. 4; Table 2 |
 | 12 | `24A_mito_extract.sh submit` → `24A_mito_extract.sh merge` → `24B_mito_lineage.R` | Consensus mitogenome per fish, Arctic/Atlantic mitochondrial lineage | Discussion (mtDNA) |
 | 13 | `44_rankin_pca_groups.sh` → `45_plot_rankin_chrom_cor.R` → `hi_by_group_3groups.R` | Per-chromosome PCA of Rankin Inlet, PCA groups, hybrid index by group | Fig. S5; Results |
-| 14 | *drivers of the gradient (corridor distance, varpart, partial RDA)* — **script to be added** | Latitude vs distance to the Atlantic entry corridor | Fig. S2; Table S1 |
+| 14 | `34_marine_distances.R` (**to be added**) → `35_variance_partitioning.R` | Distance to the Atlantic entry corridor; variance partitioning of D between latitude and corridor distance (varpart, partial RDA, 9,999 permutations), with and without HOR and PAM | Fig. S2; Table S1 |
 
 ### Figures (run with `$RSCRIPT` from the pipeline root, no `sbatch`)
 
