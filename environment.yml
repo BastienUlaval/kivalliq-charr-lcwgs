@@ -49,13 +49,19 @@ dependencies:
   - r-sf
   - r-ggspatial
   - r-marmap          # compute_hydro_distances.R only
+  - r-terra           # 34_marine_distances.R (bathymetry raster)
+  - r-igraph          # 34_marine_distances.R (least-cost marine paths)
 
   # --- statistics ----------------------------------------------------------
   - r-vegan           # Mantel / partial Mantel in ibd_analysis.R
   - r-nlme            # must resolve alongside vegan without conflict
+  - r-ape             # 24B_mito_lineage.R (mitochondrial tree)
 
   # --- Bioconductor --------------------------------------------------------
   - bioconductor-genomicranges
+
+  # --- command-line tools ------------------------------------------------
+  - samtools>=1.16    # 24A_mito_extract.sh (samtools consensus)
 
   # --- Python helpers (standard library only, but pin the interpreter) -----
   - python>=3.9

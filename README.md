@@ -60,6 +60,10 @@ step through an `nlme`/`vegan` conflict.
    `watercourse_1.shp`). Download them separately and pass the containing
    directory as the `shp_dir` argument.
 
+5. For step 14, download the ETOPO 2022 bathymetry at 1 arc-minute
+   (NOAA NCEI), crop it to the study area and save it as
+   `02_info/bathy/kivalliq_etopo.tif` (or set `BATHY_TIF`).
+
 All scripts are run from the pipeline root (`BASE_DIR`).
 
 ## Reference genome
@@ -102,7 +106,19 @@ part of this assembly.
 | 11 | `11_dstats.sh` → `11B_dstats_figures.sh` | D-statistics D(JAY, P; LLS, DV), ANGSD `-doAbbababa2` | Fig. 4; Table 2 |
 | 12 | `24A_mito_extract.sh submit` → `24A_mito_extract.sh merge` → `24B_mito_lineage.R` | Consensus mitogenome per fish, Arctic/Atlantic mitochondrial lineage | Discussion (mtDNA) |
 | 13 | `44_rankin_pca_groups.sh` → `45_plot_rankin_chrom_cor.R` → `hi_by_group_3groups.R` | Per-chromosome PCA of Rankin Inlet, PCA groups, hybrid index by group | Fig. S5; Results |
-| 14 | `34_marine_distances.R` (**to be added**) → `35_variance_partitioning.R` | Distance to the Atlantic entry corridor; variance partitioning of D between latitude and corridor distance (varpart, partial RDA, 9,999 permutations), with and without HOR and PAM | Fig. S2; Table S1 |
+| 14 | `34_marine_distances.R` → `35_variance_partitioning.R` | Distance to the Atlantic entry corridor; variance partitioning of D between latitude and corridor distance (varpart, partial RDA, 9,999 permutations), with and without HOR and PAM | Fig. S2; Table S1 |
+
+### Two distance calculations
+
+- `compute_hydro_distances.R` (marmap) gives the pairwise in-water distances used
+  for isolation by distance (Fig. 6d). For the lake and headwater sites (HOR,
+  PAM, NOP), a channel length measured in Google Earth is added to the marine
+  path (HOR: 402 km to open water).
+- `34_marine_distances.R` (terra + igraph, 8-neighbour graph on ETOPO 2022)
+  gives each site's distance to the eastern entrance of Hudson Strait, used in
+  the variance partitioning (Fig. S2, Table S1). Sites are snapped to the
+  largest connected marine component; HOR gets a fixed 300 km freshwater leg
+  from the mouth of Chesterfield Inlet.
 
 ### Figures (run with `$RSCRIPT` from the pipeline root, no `sbatch`)
 
